@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:research_component/component/custom_toolbar.dart';
-import 'package:research_component/component/input_field_dropdown_widget.dart';
+import 'package:research_component/component/formField/input_field_dropdown_widget.dart';
 import 'package:research_component/constant/constants_form_field.dart';
-import '../component/form_field_config.dart';
-import '../component/input_field_text_widget.dart';
+import '../component/formField/form_field_config.dart';
+import '../component/formField/input_field_text_widget.dart';
 
 class FormScreen extends StatefulWidget {
   @override

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../constant/constants_color.dart';
+import '../../constant/constants_color.dart';
 
 class InputFieldDropdownWidget extends StatelessWidget {
   final String? selectedValue;
@@ -37,7 +37,7 @@ class InputFieldDropdownWidget extends StatelessWidget {
             Text(
               label,
               style: theme.textTheme.labelLarge?.copyWith(
-                color: Colors.teal.shade700,
+                color: ConstantsColor.PRIMARY.shade700,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -49,7 +49,10 @@ class InputFieldDropdownWidget extends StatelessWidget {
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
           value: selectedValue,
-          hint: Text(hintText??''),
+          hint: Text(
+            hintText ?? '',
+            style: const TextStyle(color: Colors.grey),
+          ),
           icon: const Icon(Icons.arrow_drop_down),
           decoration: InputDecoration(
             prefixIcon:
