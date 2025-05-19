@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:research_component/component/custom_toolbar.dart';
-import 'package:research_component/component/input_field_widget.dart';
+import 'package:research_component/component/input_field_dropdown_widget.dart';
 import 'package:research_component/constant/constants_form_field.dart';
-
 import '../component/form_field_config.dart';
+import '../component/input_field_text_widget.dart';
 
 class FormScreen extends StatefulWidget {
   @override
@@ -37,15 +37,28 @@ class _FormScreenState extends State<FormScreen> {
       obscureText: true,
       fieldType: ConstantsFormField.TYPE_INPUT_TEXT,
     ),
+    FormFieldConfig(
+      label: 'Status',
+      hint: 'Select your Status',
+      fieldType: ConstantsFormField.TYPE_INPUT_DROPDOWN,
+      isRequired: true,
+      icon: Icons.filter_alt,
+      dropdownOptions: ['Active', 'Inactive', 'Pending'],
+    ),
   ];
 
   final Map<String, TextEditingController> controllers = {};
+  final Map<String, String?> dropdownValues = {};
 
   @override
   void initState() {
     super.initState();
     for (var field in fields) {
-      controllers[field.label] = TextEditingController();
+      if (field.fieldType==ConstantsFormField.TYPE_INPUT_DROPDOWN) {
+        dropdownValues[field.label] = null;
+      } else {
+        controllers[field.label] = TextEditingController();
+      }
     }
   }
 
@@ -61,20 +74,30 @@ class _FormScreenState extends State<FormScreen> {
     setState(() {
       errors.clear();
       for (var field in fields) {
-        final value = controllers[field.label]?.text ?? '';
-        if (value.isEmpty) {
-          errors[field.label] = '${field.label} is required';
+        if (field.fieldType== ConstantsFormField.TYPE_INPUT_DROPDOWN) {
+          final value = dropdownValues[field.label];
+          if (field.isRequired && (value == null || value.isEmpty)) {
+            errors[field.label] = '${field.label} is required';
+          }
+        } else {
+          final value = controllers[field.label]?.text ?? '';
+          if (field.isRequired && value.isEmpty) {
+            errors[field.label] = '${field.label} is required';
+          }
         }
       }
     });
 
     if (errors.isEmpty) {
       for (var field in fields) {
-        final value = controllers[field.label]?.text ?? '';
+        final value = field.fieldType== ConstantsFormField.TYPE_INPUT_DROPDOWN
+            ? dropdownValues[field.label]
+            : controllers[field.label]?.text;
         print('${field.label}: $value');
       }
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -83,30 +106,55 @@ class _FormScreenState extends State<FormScreen> {
         title: 'Input Form Registration',
         isShowBackButton: false,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            ...fields.map(
-              (field) => InputFieldWidget(
-                label: field.label,
-                hintText: field.hint,
-                icon: field.icon,
-                helperText: field.helper,
-                errorText: errors[field.label],
-                // Pass error
-                keyboardType: field.keyboardType,
-                obscureText: field.obscureText,
-                controller: controllers[field.label]!,
-                isRequired: field.isRequired,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              ...fields.map(
+                (field){
+                  if(field.fieldType== ConstantsFormField.TYPE_INPUT_TEXT){
+                    return InputFieldTextWidget(
+                      label: field.label,
+                      hintText: field.hint,
+                      icon: field.icon,
+                      helperText: field.helper,
+                      errorText: errors[field.label],
+                      keyboardType: field.keyboardType!,
+                      obscureText: field.obscureText,
+                      controller: controllers[field.label]!,
+                      isRequired: field.isRequired,
+                    );
+                  }else{
+                    return InputFieldDropdownWidget(
+                      label: field.label,
+                      icon: field.icon,
+                      hintText: field.hint,
+                      selectedValue: dropdownValues[field.label],
+                      options: field.dropdownOptions ?? [],
+                      errorText: errors[field.label],
+                      isRequired: field.isRequired,
+                      onChanged: (value) {
+                        print('Dropdown value selected: $value'); // Tambahkan log ini
+                        if (value != null) {
+                          setState(() {
+                            dropdownValues[field.label] = value;
+                            print('Saved to dropdownValues[${field.label}] = $value');
+                          });
+                        }
+                      },
+
+                    );
+                  }
+                }
               ),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: handleSubmit,
-              child: const Text("Submit"),
-            ),
-          ],
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: handleSubmit,
+                child: const Text("Submit"),
+              ),
+            ],
+          ),
         ),
       ),
     );

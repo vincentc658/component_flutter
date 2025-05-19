@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:research_component/constant/constants_color.dart';
 
 class CustomToolbar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -29,14 +30,14 @@ class CustomToolbar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false,
       backgroundColor: Colors.transparent,
       elevation: 0,
-      foregroundColor: Colors.teal[800],
+      foregroundColor: ConstantsColor.PRIMARY[800],
       flexibleSpace: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Colors.teal.shade700,
-              Colors.teal.shade400,
-              Colors.teal.shade200,
+              ConstantsColor.PRIMARY.shade700,
+              ConstantsColor.PRIMARY.shade400,
+              ConstantsColor.PRIMARY.shade200,
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,

@@ -2,22 +2,27 @@ import 'package:flutter/material.dart';
 
 import '../constant/constants_color.dart';
 
-class StatusDropdown extends StatelessWidget {
+class InputFieldDropdownWidget extends StatelessWidget {
   final String? selectedValue;
   final List<String> options;
   final ValueChanged<String?> onChanged;
   final String label;
   final String? helperText;
+  final String? hintText;
   final String? errorText;
   final bool isRequired;
-  const StatusDropdown({
+  final IconData? icon;
+
+  const InputFieldDropdownWidget({
     Key? key,
     required this.label,
+    required this.hintText,
     required this.selectedValue,
     required this.options,
     required this.onChanged,
     this.helperText,
     this.errorText,
+    this.icon,
     this.isRequired = false,
   }) : super(key: key);
 
@@ -44,25 +49,43 @@ class StatusDropdown extends StatelessWidget {
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
           value: selectedValue,
+          hint: Text(hintText??''),
           icon: const Icon(Icons.arrow_drop_down),
           decoration: InputDecoration(
-            prefixIcon: const Icon(
-              Icons.filter_alt,
-              color: ConstantsColor.PRIMARY,
-            ),
+            prefixIcon:
+                icon != null
+                    ? Padding(
+                      padding: const EdgeInsets.only(left: 10, right: 8),
+                      child: Icon(icon, color: ConstantsColor.PRIMARY),
+                    )
+                    : null,
             contentPadding: const EdgeInsets.symmetric(
               vertical: 14,
               horizontal: 16,
             ),
+            errorText: errorText,
+            errorStyle: TextStyle(
+              color: Colors.red.shade700,
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+            ),
             filled: true,
-            fillColor: Colors.white70,
+            fillColor: Colors.grey.shade100,
+            border: InputBorder.none,
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: Colors.grey.shade300),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: ConstantsColor.PRIMARY),
+              borderSide: BorderSide(
+                color: ConstantsColor.PRIMARY.shade400,
+                width: 1.5,
+              ),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: Colors.red.shade400, width: 1.5),
             ),
           ),
           items:
@@ -77,13 +100,6 @@ class StatusDropdown extends StatelessWidget {
               }).toList(),
           onChanged: onChanged,
         ),
-        if (errorText != null) ...[
-          const SizedBox(height: 6),
-          Text(
-            errorText!,
-            style: TextStyle(fontSize: 12, color: Colors.red.shade600),
-          ),
-        ],
         const SizedBox(height: 18),
         if (helperText != null) ...[
           const SizedBox(height: 6),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:research_component/constant/constants_color.dart';
 
-class InputFieldWidget extends StatelessWidget {
+class InputFieldTextWidget extends StatelessWidget {
   final String label;
   final String? hintText;
   final String? helperText;
@@ -11,7 +12,7 @@ class InputFieldWidget extends StatelessWidget {
   final bool isRequired;
   final TextInputType keyboardType;
 
-  const InputFieldWidget({
+  const InputFieldTextWidget({
     Key? key,
     required this.label,
     required this.controller,
@@ -37,7 +38,7 @@ class InputFieldWidget extends StatelessWidget {
             Text(
               label,
               style: theme.textTheme.labelLarge?.copyWith(
-                color: Colors.teal.shade700,
+                color: ConstantsColor.PRIMARY.shade700,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -57,7 +58,7 @@ class InputFieldWidget extends StatelessWidget {
                 icon != null
                     ? Padding(
                       padding: const EdgeInsets.only(left: 10, right: 8),
-                      child: Icon(icon, color: Colors.teal),
+                      child: Icon(icon, color:ConstantsColor.PRIMARY),
                     )
                     : null,
             hintText: hintText,
@@ -69,8 +70,8 @@ class InputFieldWidget extends StatelessWidget {
             ),
             hintStyle: const TextStyle(color: Colors.grey),
             contentPadding: const EdgeInsets.symmetric(
+              vertical: 14,
               horizontal: 16,
-              vertical: 18,
             ),
             filled: true,
             fillColor: Colors.grey.shade100,
@@ -81,7 +82,7 @@ class InputFieldWidget extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.teal.shade400, width: 1.5),
+              borderSide: BorderSide(color: ConstantsColor.PRIMARY.shade400, width: 1.5),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
