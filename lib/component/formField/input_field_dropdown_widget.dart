@@ -1,51 +1,62 @@
 import 'package:flutter/material.dart';
 
 import '../../constant/constants_color.dart';
+import 'form_field_config.dart';
 
 class InputFieldDropdownWidget extends StatelessWidget {
   final String? selectedValue;
   final List<String> options;
   final ValueChanged<String?> onChanged;
-  final String label;
+  final String? label;
   final String? helperText;
   final String? hintText;
   final String? errorText;
   final bool isRequired;
   final IconData? icon;
 
-  const InputFieldDropdownWidget({
+  InputFieldDropdownWidget({
     Key? key,
-    required this.label,
-    required this.hintText,
+    required FormFieldConfig fieldConfig,
     required this.selectedValue,
-    required this.options,
     required this.onChanged,
-    this.helperText,
     this.errorText,
-    this.icon,
-    this.isRequired = false,
-  }) : super(key: key);
+  }) : label = fieldConfig.label,
+       hintText = fieldConfig.hint,
+       helperText = fieldConfig.helper,
+       isRequired = fieldConfig.isRequired,
+       icon = fieldConfig.icon,
+       options = fieldConfig.dropdownOptions ?? [],
+       super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(
-              label,
-              style: theme.textTheme.labelLarge?.copyWith(
-                color: ConstantsColor.PRIMARY.shade700,
-                fontWeight: FontWeight.w600,
+        if (label != null)
+          Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    label!,
+                    style: theme.textTheme.labelLarge?.copyWith(
+                      color: ConstantsColor.PRIMARY.shade700,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  if (isRequired)
+                    const Text(
+                      "*",
+                      style: TextStyle(fontSize: 14, color: Colors.red),
+                    ),
+                ],
               ),
-            ),
-            const SizedBox(width: 4),
-            if (isRequired)
-              Text("*", style: TextStyle(fontSize: 14, color: Colors.red)),
-          ],
-        ),
+              const SizedBox(height: 8),
+            ],
+          ),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
           value: selectedValue,

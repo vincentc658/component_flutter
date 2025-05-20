@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:research_component/screen/form_screen.dart';
+import 'package:research_component/screen/progress_form_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: FormScreen(),
+      home: ProgressFormPage(),
     );
   }
 }

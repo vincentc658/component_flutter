@@ -3,7 +3,9 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 
 class FormFieldConfig {
-  final String label;
+  //tag is using to defined the field unique name
+  final String idTag;
+  final String? label;
   final String? hint;
   final String? helper;
   final String? error;
@@ -17,8 +19,9 @@ class FormFieldConfig {
   final List<String>? dropdownOptions;
 
   FormFieldConfig({
-    required this.label,
+    required this.idTag,
     this.hint,
+    this.label,
     required this.fieldType,
     this.helper,
     this.error,

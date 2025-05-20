@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:research_component/constant/constants_color.dart';
 
+import 'form_field_config.dart';
+
 class InputFieldTextWidget extends StatelessWidget {
-  final String label;
+  final String? label;
   final String? hintText;
   final String? helperText;
   final String? errorText;
@@ -12,18 +14,32 @@ class InputFieldTextWidget extends StatelessWidget {
   final bool isRequired;
   final TextInputType keyboardType;
 
-  const InputFieldTextWidget({
+  // const InputFieldTextWidget({
+  //   Key? key,
+  //   required this.label,
+  //   required this.controller,
+  //   this.hintText,
+  //   this.helperText,
+  //   this.icon,
+  //   this.errorText,
+  //   this.obscureText = false,
+  //   this.isRequired = false,
+  //   this.keyboardType = TextInputType.text,
+  // }) : super(key: key);
+
+  InputFieldTextWidget({
     Key? key,
-    required this.label,
+    required FormFieldConfig fieldConfig,
     required this.controller,
-    this.hintText,
-    this.helperText,
-    this.icon,
     this.errorText,
-    this.obscureText = false,
-    this.isRequired = false,
-    this.keyboardType = TextInputType.text,
-  }) : super(key: key);
+  })  : label = fieldConfig.label,
+        hintText = fieldConfig.hint,
+        helperText = fieldConfig.helper,
+        icon = fieldConfig.icon,
+        obscureText = fieldConfig.obscureText,
+        isRequired = fieldConfig.isRequired,
+        keyboardType = fieldConfig.keyboardType ?? TextInputType.text,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,22 +48,27 @@ class InputFieldTextWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(
-              label,
-              style: theme.textTheme.labelLarge?.copyWith(
-                color: ConstantsColor.PRIMARY.shade700,
-                fontWeight: FontWeight.w600,
+        if (label != null)
+          Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    label!,
+                    style: theme.textTheme.labelLarge?.copyWith(
+                      color: ConstantsColor.PRIMARY.shade700,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  if (isRequired)
+                    const Text("*", style: TextStyle(fontSize: 14, color: Colors.red)),
+                ],
               ),
-            ),
-            const SizedBox(width: 4),
-            if (isRequired)
-              Text("*", style: TextStyle(fontSize: 14, color: Colors.red)),
-          ],
-        ),
-        const SizedBox(height: 8),
+              const SizedBox(height: 8),
+            ],
+          ),
         TextFormField(
           controller: controller,
           obscureText: obscureText,
