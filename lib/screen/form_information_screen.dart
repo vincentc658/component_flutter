@@ -70,6 +70,9 @@ class FormInformationScreenState extends State<FormInformationScreen> {
     return formHelper.isValid;
   }
 
+  String getInfo() {
+    return formHelper.getText(fieldsToValidate[0].idTag)??'-';
+  }
   @override
   void initState() {
     super.initState();
@@ -108,7 +111,7 @@ class FormInformationScreenState extends State<FormInformationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(title: Text("Informasi", style: TextStyle(fontWeight:FontWeight.w700, fontSize: 24,color: ConstantsColor.PRIMARY ))),
+      appBar: AppBar(backgroundColor: Colors.white, title: Text("Informasi", style: TextStyle(fontWeight:FontWeight.w700, fontSize: 24,color: ConstantsColor.PRIMARY ))),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16),

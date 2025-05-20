@@ -5,14 +5,15 @@ import '../component/custom_toolbar.dart';
 import 'form_information_screen.dart';
 import 'form_screen_address.dart';
 
-class ProgressFormPage extends StatefulWidget {
+class FormRegistrationScreen extends StatefulWidget {
   @override
-  _ProgressFormPageState createState() => _ProgressFormPageState();
+  _FormRegistrationScreenState createState() => _FormRegistrationScreenState();
 }
 
-class _ProgressFormPageState extends State<ProgressFormPage> {
+class _FormRegistrationScreenState extends State<FormRegistrationScreen> {
   int currentStep = 0;
   final int totalSteps = 3;
+  late final List<Widget> _allForms;
 
   final formKeys = [
     GlobalKey<FormInformationScreenState>(),
@@ -24,9 +25,8 @@ class _ProgressFormPageState extends State<ProgressFormPage> {
     final currentFormKey = formKeys[currentStep];
     bool isValid = false;
     if (currentFormKey is GlobalKey<FormInformationScreenState>) {
-      isValid =
-          (currentFormKey.currentState as FormInformationScreenState)
-              .validateCurrentStep();
+      FormInformationScreenState stateInformation= (currentFormKey.currentState as FormInformationScreenState);
+      isValid = stateInformation.validateCurrentStep();
     } else if (currentFormKey is GlobalKey<FormScreenAddressState>) {
       isValid =
           (currentFormKey.currentState as FormScreenAddressState)
@@ -50,6 +50,15 @@ class _ProgressFormPageState extends State<ProgressFormPage> {
 
   void submitForm() {
     // Add your submit logic here
+  }
+  @override
+  void initState() {
+    super.initState();
+    _allForms = [
+      FormInformationScreen(key: formKeys[0] as GlobalKey<FormInformationScreenState>),
+      FormScreenAddress(key: formKeys[1] as GlobalKey<FormScreenAddressState>),
+      FormInformationScreen(key: formKeys[2] as GlobalKey<FormInformationScreenState>),
+    ];
   }
 
   @override
@@ -80,17 +89,25 @@ class _ProgressFormPageState extends State<ProgressFormPage> {
 
             // Form Card
             Expanded(
-              child: IndexedStack(
-                index: currentStep,
-                children: [
-                  FormInformationScreen(key: formKeys[0] as GlobalKey<FormInformationScreenState>),
-                  FormScreenAddress(
-                    key: formKeys[1] as GlobalKey<FormScreenAddressState>,
-                  ),
-                  FormInformationScreen(key: formKeys[2] as GlobalKey<FormInformationScreenState>),
-                ],
+              child: Stack(
+                children: List.generate(totalSteps, (index) {
+                  final isActive = index == currentStep;
+                  return AnimatedSlide(
+                    duration: Duration(milliseconds: 400),
+                    offset: isActive ? Offset.zero : Offset(index < currentStep ? -1 : 1, 0),
+                    child: AnimatedOpacity(
+                      duration: Duration(milliseconds: 400),
+                      opacity: isActive ? 1 : 0,
+                      child: IgnorePointer(
+                        ignoring: !isActive,
+                        child: _allForms[index],
+                      ),
+                    ),
+                  );
+                }),
               ),
             ),
+
 
             const SizedBox(height: 24),
 

@@ -119,7 +119,7 @@ class FormScreenAddressState extends State<FormScreenAddress> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(title: Text("Alamat", style: TextStyle(fontWeight:FontWeight.w700, fontSize: 24,color: ConstantsColor.PRIMARY ))),
+      appBar: AppBar(backgroundColor: Colors.white,title: Text("Alamat", style: TextStyle(fontWeight:FontWeight.w700, fontSize: 24,color: ConstantsColor.PRIMARY ))),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16),
