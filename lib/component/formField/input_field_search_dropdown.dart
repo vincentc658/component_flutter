@@ -1,50 +1,57 @@
 import 'package:flutter/material.dart';
-import '../constant/constants_color.dart';
-import 'empty_data_screen.dart';
+import 'package:research_component/component/formField/dropdown_option.dart';
+import '../../constant/constants_color.dart';
+import '../../constant/constants_styling.dart';
+import 'form_field_config.dart';
 
-class SearchableDropdown extends StatefulWidget {
-  final List<DropdownOptionModel> items;
-  final DropdownOptionModel? selectedValue;
-  final Function(DropdownOptionModel) onChanged;
-  final String hintText;
+class InputFieldSearchDropdown extends StatefulWidget {
+  final String? label;
+  final String? hintText;
+  final String? helperText;
+  final String? errorText;
+  final IconData? icon;
+  final bool isRequired;
+  final TextInputType keyboardType;
+  final List<DropdownOption> items;
+  DropdownOption? selectedValue;
+  final Function(DropdownOption) onChanged;
+  final TextEditingController controller;
 
-  const SearchableDropdown({
-    super.key,
-    required this.items,
+  InputFieldSearchDropdown({
+    Key? key,
+    required FormFieldConfig fieldConfig,
     required this.onChanged,
+    required this.controller,
     this.selectedValue,
-    this.hintText = "Select item",
-  });
+    this.errorText,
+  }) : label = fieldConfig.label,
+       hintText = fieldConfig.hint,
+       helperText = fieldConfig.helper,
+       icon = fieldConfig.icon,
+       items = fieldConfig.dropdownOptions??[],
+       isRequired = fieldConfig.isRequired,
+       keyboardType = fieldConfig.keyboardType ?? TextInputType.text,
+       super(key: key);
 
   @override
-  State<SearchableDropdown> createState() => _SearchableDropdownState();
+  State<InputFieldSearchDropdown> createState() =>
+      _InputFieldSearchDropdownState();
 }
 
-class _SearchableDropdownState extends State<SearchableDropdown> {
-  late TextEditingController searchController;
-  List<DropdownOptionModel> filteredItems = [];
+class _InputFieldSearchDropdownState extends State<InputFieldSearchDropdown> {
+  late List<DropdownOption> filteredItems;
+  late DropdownOption? selectedValue;
+  TextEditingController? searchController;
 
   @override
   void initState() {
     super.initState();
-    searchController = TextEditingController();
     filteredItems = widget.items;
-  }
-
-  @override
-  void dispose() {
-    searchController.dispose();
-    super.dispose();
+    searchController = TextEditingController();
+    selectedValue = widget.selectedValue; // simpan nilai awal
   }
 
   void _openDropdownDialog() {
-    final query = searchController.text.toLowerCase();
-    filteredItems =
-        widget.items
-            .where(
-              (item) => item.codificationName.toLowerCase().contains(query),
-            )
-            .toList();
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -57,21 +64,17 @@ class _SearchableDropdownState extends State<SearchableDropdown> {
           builder: (context, scrollController) {
             return StatefulBuilder(
               builder: (context, setModalState) {
-                // Reassign the listener to call setModalState
-                searchController.addListener(() {
-                  final query = searchController.text.toLowerCase();
-                  final newFiltered =
-                      widget.items
-                          .where(
-                            (item) => item.codificationName
-                                .toLowerCase()
-                                .contains(query),
-                          )
-                          .toList();
+                searchController?.addListener(() {
+                  final query = searchController?.text.toLowerCase();
+                  final results =
+                      widget.items.where((item) {
+                        return item.name.toLowerCase().contains(query ?? '');
+                      }).toList();
                   setModalState(() {
-                    filteredItems = newFiltered;
+                    filteredItems = results;
                   });
                 });
+
                 return Container(
                   decoration: const BoxDecoration(
                     color: Colors.white,
@@ -117,7 +120,10 @@ class _SearchableDropdownState extends State<SearchableDropdown> {
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: ConstantsColor.PRIMARY.shade300, width: 1.5),
+                            borderSide: BorderSide(
+                              color: ConstantsColor.PRIMARY.shade300,
+                              width: 1.5,
+                            ),
                           ),
                         ),
                       ),
@@ -125,9 +131,7 @@ class _SearchableDropdownState extends State<SearchableDropdown> {
                       Expanded(
                         child:
                             filteredItems.isEmpty
-                                ? EmptyDataScreen(
-                                  message: 'Search Result Empty',
-                                )
+                                ? Center(child: Text("No results found."))
                                 : ListView.separated(
                                   controller: scrollController,
                                   itemCount: filteredItems.length,
@@ -139,13 +143,10 @@ class _SearchableDropdownState extends State<SearchableDropdown> {
                                   itemBuilder: (context, index) {
                                     final item = filteredItems[index];
                                     final isSelected =
-                                        widget
-                                            .selectedValue
-                                            ?.codificationName ==
-                                        item.codificationName;
+                                        selectedValue?.name == item.name;
                                     return ListTile(
                                       title: Text(
-                                        '${item.id} - ${item.codificationName}',
+                                        '${item.id} - ${item.name}',
                                         style: TextStyle(
                                           fontWeight:
                                               isSelected
@@ -168,6 +169,12 @@ class _SearchableDropdownState extends State<SearchableDropdown> {
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       onTap: () {
+                                        print("${item.id} ${item.name}");
+                                        setState(() {
+                                          selectedValue = item;
+                                          widget.controller?.text =
+                                              '${item.id} - ${item.name}';
+                                        });
                                         widget.onChanged(item);
                                         Navigator.pop(context);
                                       },
@@ -188,45 +195,66 @@ class _SearchableDropdownState extends State<SearchableDropdown> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: _openDropdownDialog,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        decoration: BoxDecoration(
-          color: Colors.white70,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: Colors.grey.shade300),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                widget.selectedValue != null
-                    ? '${widget.selectedValue!.id} - ${widget.selectedValue!.codificationName}'
-                    : widget.hintText,
-                style: TextStyle(
-                  fontSize: 16,
-                  color:
-                      widget.selectedValue == null
-                          ? Colors.grey
-                          : Colors.black87,
-                ),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
+    final theme = Theme.of(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (widget.label != null)
+          Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.label!,
+                    style: theme.textTheme.labelLarge?.copyWith(
+                      color: ConstantsColor.PRIMARY.shade700,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  if (widget.isRequired)
+                    const Text(
+                      "*",
+                      style: TextStyle(fontSize: 14, color: Colors.red),
+                    ),
+                ],
               ),
+              const SizedBox(height: 8),
+            ],
+          ),
+        TextField(
+          readOnly: true,
+          onTap: _openDropdownDialog,
+          controller: widget.controller,
+          decoration: InputDecoration(
+            hintStyle: TextStyle(color: Colors.grey),
+            hintText: widget.hintText ?? 'Select an option',
+            suffixIcon: const Icon(Icons.search, color: ConstantsColor.PRIMARY),
+            filled: true,
+            fillColor: Colors.white,
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 14,
+              horizontal: 16,
             ),
-            const Icon(Icons.search),
-          ],
+            border: ConstantsStyling.enabledBorder,
+            enabledBorder: ConstantsStyling.enabledBorder,
+            focusedBorder: ConstantsStyling.focusedBorder,
+            errorBorder: ConstantsStyling.errorBorder,
+            errorText: widget.errorText,
+          ),
         ),
-      ),
+
+        if (widget.helperText != null) ...[
+          const SizedBox(height: 6),
+          Text(
+            widget.helperText!,
+            style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+          ),
+        ],
+        const SizedBox(height: 18),
+      ],
     );
   }
-}
-class DropdownOptionModel{
-  String id;
-  String codificationName;
-  DropdownOptionModel({
-    required this.id,
-    required this.codificationName,
-  });
 }

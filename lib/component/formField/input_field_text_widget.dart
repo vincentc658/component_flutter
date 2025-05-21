@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:research_component/constant/constants_color.dart';
+import 'package:research_component/constant/constants_styling.dart';
 
 import 'form_field_config.dart';
 
@@ -14,32 +15,19 @@ class InputFieldTextWidget extends StatelessWidget {
   final bool isRequired;
   final TextInputType keyboardType;
 
-  // const InputFieldTextWidget({
-  //   Key? key,
-  //   required this.label,
-  //   required this.controller,
-  //   this.hintText,
-  //   this.helperText,
-  //   this.icon,
-  //   this.errorText,
-  //   this.obscureText = false,
-  //   this.isRequired = false,
-  //   this.keyboardType = TextInputType.text,
-  // }) : super(key: key);
-
   InputFieldTextWidget({
     Key? key,
     required FormFieldConfig fieldConfig,
     required this.controller,
     this.errorText,
-  })  : label = fieldConfig.label,
-        hintText = fieldConfig.hint,
-        helperText = fieldConfig.helper,
-        icon = fieldConfig.icon,
-        obscureText = fieldConfig.obscureText,
-        isRequired = fieldConfig.isRequired,
-        keyboardType = fieldConfig.keyboardType ?? TextInputType.text,
-        super(key: key);
+  }) : label = fieldConfig.label,
+       hintText = fieldConfig.hint,
+       helperText = fieldConfig.helper,
+       icon = fieldConfig.icon,
+       obscureText = fieldConfig.obscureText,
+       isRequired = fieldConfig.isRequired,
+       keyboardType = fieldConfig.keyboardType ?? TextInputType.text,
+       super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +51,10 @@ class InputFieldTextWidget extends StatelessWidget {
                   ),
                   const SizedBox(width: 4),
                   if (isRequired)
-                    const Text("*", style: TextStyle(fontSize: 14, color: Colors.red)),
+                    const Text(
+                      "*",
+                      style: TextStyle(fontSize: 14, color: Colors.red),
+                    ),
                 ],
               ),
               const SizedBox(height: 8),
@@ -79,7 +70,7 @@ class InputFieldTextWidget extends StatelessWidget {
                 icon != null
                     ? Padding(
                       padding: const EdgeInsets.only(left: 10, right: 8),
-                      child: Icon(icon, color:ConstantsColor.PRIMARY),
+                      child: Icon(icon, color: ConstantsColor.PRIMARY),
                     )
                     : null,
             hintText: hintText,
@@ -95,20 +86,11 @@ class InputFieldTextWidget extends StatelessWidget {
               horizontal: 16,
             ),
             filled: true,
-            fillColor: Colors.grey.shade100,
-            border: InputBorder.none,
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey.shade300),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: ConstantsColor.PRIMARY.shade400, width: 1.5),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.red.shade400, width: 1.5),
-            ),
+            fillColor: Colors.white,
+            border: ConstantsStyling.enabledBorder,
+            enabledBorder: ConstantsStyling.enabledBorder,
+            focusedBorder: ConstantsStyling.focusedBorder,
+            errorBorder: ConstantsStyling.errorBorder,
           ),
         ),
         if (helperText != null) ...[

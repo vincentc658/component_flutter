@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../constant/constants_color.dart';
+import '../../constant/constants_styling.dart';
+import 'dropdown_option.dart';
 import 'form_field_config.dart';
 
 class InputFieldDropdownWidget extends StatelessWidget {
   final String? selectedValue;
-  final List<String> options;
+  final List<DropdownOption> options;
   final ValueChanged<String?> onChanged;
   final String? label;
   final String? helperText;
@@ -57,7 +59,6 @@ class InputFieldDropdownWidget extends StatelessWidget {
               const SizedBox(height: 8),
             ],
           ),
-        const SizedBox(height: 8),
         DropdownButtonFormField<String>(
           value: selectedValue,
           hint: Text(
@@ -81,40 +82,25 @@ class InputFieldDropdownWidget extends StatelessWidget {
             errorStyle: TextStyle(
               color: Colors.red.shade700,
               fontSize: 13,
-              fontWeight: FontWeight.w500,
             ),
             filled: true,
-            fillColor: Colors.grey.shade100,
-            border: InputBorder.none,
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey.shade300),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(
-                color: ConstantsColor.PRIMARY.shade400,
-                width: 1.5,
-              ),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.red.shade400, width: 1.5),
-            ),
+            fillColor: Colors.white,
+            border: ConstantsStyling.enabledBorder,
+            enabledBorder: ConstantsStyling.enabledBorder,
+            focusedBorder: ConstantsStyling.focusedBorder,
+            errorBorder: ConstantsStyling.errorBorder,
           ),
           items:
               options.map((status) {
                 return DropdownMenuItem<String>(
-                  value: status,
+                  value: status.name,
                   child: Text(
-                    status,
-                    style: const TextStyle(fontWeight: FontWeight.w500),
+                    status.name,
                   ),
                 );
               }).toList(),
           onChanged: onChanged,
         ),
-        const SizedBox(height: 18),
         if (helperText != null) ...[
           const SizedBox(height: 6),
           Text(

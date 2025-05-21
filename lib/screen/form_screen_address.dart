@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:research_component/component/custom_toolbar.dart';
 import 'package:research_component/component/formField/input_field_dropdown_widget.dart';
 import 'package:research_component/constant/constants_form_field.dart';
+import '../component/formField/dropdown_option.dart';
 import '../component/formField/form_field_config.dart';
 import '../component/formField/form_helper.dart';
 import '../component/formField/input_field_text_widget.dart';
@@ -58,7 +59,11 @@ class FormScreenAddressState extends State<FormScreenAddress> {
     fieldType: ConstantsFormField.TYPE_INPUT_DROPDOWN,
     isRequired: true,
     icon: Icons.filter_alt,
-    dropdownOptions: ['Active', 'Inactive', 'Pending'],
+    dropdownOptions: [
+      DropdownOption(id: '1', name: 'Testing'),
+      DropdownOption(id: '3', name: 'Testingting'),
+      DropdownOption(id: '2', name: 'Testing 2'),
+    ],
   );
 
   List<FormFieldConfig> fieldsToValidate = [];

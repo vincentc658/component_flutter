@@ -2,6 +2,8 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 
+import 'dropdown_option.dart';
+
 class FormFieldConfig {
   //tag is using to defined the field unique name
   final String idTag;
@@ -16,7 +18,7 @@ class FormFieldConfig {
 
   // New: Dropdown support
   final int fieldType;
-  final List<String>? dropdownOptions;
+  final List<DropdownOption>? dropdownOptions;
 
   FormFieldConfig({
     required this.idTag,
