@@ -78,14 +78,14 @@ class _FormRegistrationScreenState extends State<FormRegistrationScreen> {
               borderRadius: BorderRadius.circular(10),
               child: LinearProgressIndicator(
                 value: (currentStep + 1) / totalSteps,
-                minHeight: 10,
+                minHeight: 6,
                 backgroundColor: Colors.grey[300],
                 valueColor: AlwaysStoppedAnimation<Color>(
                   ConstantsColor.PRIMARY,
                 ),
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 8),
 
             // Form Card
             Expanded(

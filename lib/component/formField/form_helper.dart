@@ -13,6 +13,9 @@ class FormHelper {
     for (var field in fields) {
       if (field.fieldType == ConstantsFormField.TYPE_INPUT_DROPDOWN) {
         dropdownValues[field.idTag] = null;
+      } else if (field.fieldType == ConstantsFormField.TYPE_INPUT_SEARCH_DROPDOWN) {
+        dropdownValues[field.idTag] = null;
+        controllers[field.idTag] = TextEditingController();
       } else {
         controllers[field.idTag] = TextEditingController();
       }
@@ -49,6 +52,8 @@ class FormHelper {
   String? getDropdownValue(String label) => dropdownValues[label];
 
   void setDropdownValue(String label, String? value) {
+    print('setDropdownValue $label $value');
+
     dropdownValues[label] = value;
   }
 }

@@ -15,5 +15,9 @@ class ConstantsStyling{
     borderRadius: BorderRadius.circular(12),
     borderSide: BorderSide(color: Colors.red.shade400, width: 1.5),
   );
+  static TextStyle textStyleError =TextStyle(
+    color: Colors.red.shade700,
+    fontSize: 13,
+  );
 
 }

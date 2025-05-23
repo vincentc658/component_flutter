@@ -11,6 +11,7 @@ class InputFieldSearchDropdown extends StatefulWidget {
   final String? errorText;
   final IconData? icon;
   final bool isRequired;
+  final bool isShowId;
   final TextInputType keyboardType;
   final List<DropdownOption> items;
   DropdownOption? selectedValue;
@@ -22,13 +23,14 @@ class InputFieldSearchDropdown extends StatefulWidget {
     required FormFieldConfig fieldConfig,
     required this.onChanged,
     required this.controller,
+    required this.isShowId,
     this.selectedValue,
     this.errorText,
   }) : label = fieldConfig.label,
        hintText = fieldConfig.hint,
        helperText = fieldConfig.helper,
        icon = fieldConfig.icon,
-       items = fieldConfig.dropdownOptions??[],
+       items = fieldConfig.dropdownOptions ?? [],
        isRequired = fieldConfig.isRequired,
        keyboardType = fieldConfig.keyboardType ?? TextInputType.text,
        super(key: key);
@@ -114,17 +116,8 @@ class _InputFieldSearchDropdownState extends State<InputFieldSearchDropdown> {
                             horizontal: 16,
                             vertical: 16,
                           ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: Colors.grey.shade300),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              color: ConstantsColor.PRIMARY.shade300,
-                              width: 1.5,
-                            ),
-                          ),
+                          enabledBorder: ConstantsStyling.enabledBorder,
+                          focusedBorder: ConstantsStyling.focusedBorder,
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -146,7 +139,9 @@ class _InputFieldSearchDropdownState extends State<InputFieldSearchDropdown> {
                                         selectedValue?.name == item.name;
                                     return ListTile(
                                       title: Text(
-                                        '${item.id} - ${item.name}',
+                                        widget.isShowId
+                                            ? '${item.id} - ${item.name}'
+                                            : item.name,
                                         style: TextStyle(
                                           fontWeight:
                                               isSelected
@@ -173,7 +168,9 @@ class _InputFieldSearchDropdownState extends State<InputFieldSearchDropdown> {
                                         setState(() {
                                           selectedValue = item;
                                           widget.controller?.text =
-                                              '${item.id} - ${item.name}';
+                                              widget.isShowId
+                                                  ? '${item.id} - ${item.name}'
+                                                  : item.name;
                                         });
                                         widget.onChanged(item);
                                         Navigator.pop(context);

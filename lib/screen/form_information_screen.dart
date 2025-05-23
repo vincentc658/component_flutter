@@ -30,6 +30,7 @@ class FormInformationScreenState extends State<FormInformationScreen> {
   );
   FormFieldConfig configLastName = FormFieldConfig(
     idTag: 'LastName',
+    isRequired: true,
     label: 'Nama Belakang',
     hint: 'Enter your name',
     keyboardType: TextInputType.name,
@@ -38,9 +39,10 @@ class FormInformationScreenState extends State<FormInformationScreen> {
   FormFieldConfig configEmail = FormFieldConfig(
     idTag: 'Email',
     label: 'Email',
+    isRequired: true,
     hint: 'Enter your email',
     icon: Icons.email,
-    isRequired: true,
+   
     keyboardType: TextInputType.emailAddress,
     fieldType: ConstantsFormField.TYPE_INPUT_TEXT,
   );
@@ -49,19 +51,21 @@ class FormInformationScreenState extends State<FormInformationScreen> {
     idTag: 'Status',
     label: 'Status',
     hint: 'Pilih Status',
-    fieldType: ConstantsFormField.TYPE_INPUT_DROPDOWN,
     isRequired: true,
+    fieldType: ConstantsFormField.TYPE_INPUT_DROPDOWN,
+   
     dropdownOptions: [
       DropdownOption(id: '1', name: 'Single'),
       DropdownOption(id: '3', name: 'Menikah'),
     ],
   );
   FormFieldConfig configSex = FormFieldConfig(
-    idTag: 'Sex',
+    idTag: 'Jenis Kelamin',
     label: 'Jenis Kelamin',
     hint: 'Pilih Jenis Kelamin',
-    fieldType: ConstantsFormField.TYPE_INPUT_DROPDOWN,
     isRequired: true,
+    fieldType: ConstantsFormField.TYPE_INPUT_DROPDOWN,
+   
     dropdownOptions: [
       DropdownOption(id: '1', name: 'Laki-Laki'),
       DropdownOption(id: '3', name: 'Perempuan'),
@@ -71,38 +75,44 @@ class FormInformationScreenState extends State<FormInformationScreen> {
     idTag: 'Tanggal Lahir',
     label: 'Tanggal Lahir',
     hint: 'Pilih Tanggal',
-    fieldType: ConstantsFormField.TYPE_INPUT_TEXT,
     isRequired: true,
+    fieldType: ConstantsFormField.TYPE_INPUT_TEXT,
+   
   );
 
   FormFieldConfig configAddress = FormFieldConfig(
-    idTag: 'Full Address',
+    idTag: 'Alamat Lengkap',
     label: 'Alamat Lengkap',
     hint: 'Input Alamat Lengkap',
-    fieldType: ConstantsFormField.TYPE_INPUT_TEXT,
     isRequired: true,
+    helper: 'Cth : Jln. KH. Zainul Arifin',
+    fieldType: ConstantsFormField.TYPE_INPUT_TEXT,
+   
     icon: Icons.location_on,
   );
   FormFieldConfig configPostalCode = FormFieldConfig(
     idTag: 'Kode Pos',
     helper: 'Kode Pos',
+    isRequired: true,
     hint: 'Input Kode Pos',
     fieldType: ConstantsFormField.TYPE_INPUT_TEXT,
-    isRequired: true,
+   
   );
   FormFieldConfig configSubdistrict = FormFieldConfig(
     idTag: 'Kecamatan',
     helper: 'Kecamatan',
+    isRequired: true,
     hint: 'Input Kecamatan',
     fieldType: ConstantsFormField.TYPE_INPUT_TEXT,
-    isRequired: true,
+   
   );
   FormFieldConfig configProvince = FormFieldConfig(
     idTag: 'Provinsi',
     helper: 'Provinsi',
-    hint: 'Pilih Provinsi',
-    fieldType: ConstantsFormField.TYPE_INPUT_TEXT,
     isRequired: true,
+    hint: 'Pilih Provinsi',
+    fieldType: ConstantsFormField.TYPE_INPUT_SEARCH_DROPDOWN,
+   
     dropdownOptions: [
       DropdownOption(id: '1', name: 'Aceh'),
       DropdownOption(id: '2', name: 'Sumatera Utara'),
@@ -115,9 +125,10 @@ class FormInformationScreenState extends State<FormInformationScreen> {
   FormFieldConfig configAccountType = FormFieldConfig(
     idTag: 'Acc Type',
     label: 'Jenis Rekening',
+    isRequired: true,
     hint: 'Pilih Jenis Rekening',
     fieldType: ConstantsFormField.TYPE_INPUT_DROPDOWN,
-    isRequired: true,
+   
     dropdownOptions: [
       DropdownOption(id: '1', name: 'Rekening Terbuka'),
       DropdownOption(id: '3', name: 'Rekening Test'),
@@ -132,6 +143,7 @@ class FormInformationScreenState extends State<FormInformationScreen> {
     setState(() {
       formHelper.validate();
     });
+    handleSubmit();
     return formHelper.isValid;
   }
 
@@ -170,9 +182,11 @@ class FormInformationScreenState extends State<FormInformationScreen> {
     if (formHelper.isValid) {
       for (var field in fieldsToValidate) {
         final value =
-            field.fieldType == ConstantsFormField.TYPE_INPUT_DROPDOWN
-                ? formHelper.getDropdownValue(field.idTag)
-                : formHelper.getText(field.idTag);
+        (field.fieldType == ConstantsFormField.TYPE_INPUT_DROPDOWN ||
+            field.fieldType == ConstantsFormField.TYPE_INPUT_SEARCH_DROPDOWN)
+            ? formHelper.getDropdownValue(field.idTag)
+            : formHelper.getText(field.idTag);
+
         print('${field.label}: $value');
       }
     }
@@ -186,6 +200,7 @@ class FormInformationScreenState extends State<FormInformationScreen> {
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 "Informasi",
@@ -198,6 +213,7 @@ class FormInformationScreenState extends State<FormInformationScreen> {
               ),
               SizedBox(height: 24),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
                     child: InputFieldTextWidget(
@@ -252,6 +268,7 @@ class FormInformationScreenState extends State<FormInformationScreen> {
                 errorText: formHelper.errors[configAddress.idTag],
               ),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
                     child: InputFieldTextWidget(
@@ -276,6 +293,7 @@ class FormInformationScreenState extends State<FormInformationScreen> {
                 fieldConfig: configProvince,
                 controller: formHelper.controllers[configProvince.idTag]!,
                 errorText: formHelper.errors[configProvince.idTag],
+                isShowId: false,
                 onChanged: (value) {
                   setState(() {
                     formHelper.setDropdownValue(

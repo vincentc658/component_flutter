@@ -79,10 +79,7 @@ class InputFieldDropdownWidget extends StatelessWidget {
               horizontal: 16,
             ),
             errorText: errorText,
-            errorStyle: TextStyle(
-              color: Colors.red.shade700,
-              fontSize: 13,
-            ),
+            errorStyle:ConstantsStyling.textStyleError,
             filled: true,
             fillColor: Colors.white,
             border: ConstantsStyling.enabledBorder,
