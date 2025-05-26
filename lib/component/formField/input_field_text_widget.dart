@@ -13,6 +13,7 @@ class InputFieldTextWidget extends StatelessWidget {
   final TextEditingController controller;
   final bool obscureText;
   final bool isRequired;
+  final bool isShowLabel;
   final TextInputType keyboardType;
 
   InputFieldTextWidget({
@@ -20,12 +21,13 @@ class InputFieldTextWidget extends StatelessWidget {
     required FormFieldConfig fieldConfig,
     required this.controller,
     this.errorText,
-  }) : label = fieldConfig.label,
+  }) : label = fieldConfig.labelField,
        hintText = fieldConfig.hint,
        helperText = fieldConfig.helper,
        icon = fieldConfig.icon,
        obscureText = fieldConfig.obscureText,
        isRequired = fieldConfig.isRequired,
+        isShowLabel = fieldConfig.isShowLabel,
        keyboardType = fieldConfig.keyboardType ?? TextInputType.text,
        super(key: key);
 
@@ -42,15 +44,16 @@ class InputFieldTextWidget extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  if(isShowLabel)
                   Text(
                     label!,
                     style: theme.textTheme.labelLarge?.copyWith(
-                      color: ConstantsColor.PRIMARY.shade700,
+                      color: ConstantsColor.PRIMARY.shade900,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   const SizedBox(width: 4),
-                  if (isRequired)
+                  if (isRequired && isShowLabel)
                     const Text(
                       "*",
                       style: TextStyle(fontSize: 14, color: Colors.red),

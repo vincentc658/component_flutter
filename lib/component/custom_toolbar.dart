@@ -35,7 +35,7 @@ class CustomToolbar extends StatelessWidget implements PreferredSizeWidget {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              ConstantsColor.PRIMARY.shade700,
+              ConstantsColor.PRIMARY.shade900,
               ConstantsColor.PRIMARY.shade400,
               ConstantsColor.PRIMARY.shade200,
             ],

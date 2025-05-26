@@ -12,12 +12,12 @@ class FormHelper {
   FormHelper(this.fields) {
     for (var field in fields) {
       if (field.fieldType == ConstantsFormField.TYPE_INPUT_DROPDOWN) {
-        dropdownValues[field.idTag] = null;
+        dropdownValues[field.labelField] = null;
       } else if (field.fieldType == ConstantsFormField.TYPE_INPUT_SEARCH_DROPDOWN) {
-        dropdownValues[field.idTag] = null;
-        controllers[field.idTag] = TextEditingController();
+        dropdownValues[field.labelField] = null;
+        controllers[field.labelField] = TextEditingController();
       } else {
-        controllers[field.idTag] = TextEditingController();
+        controllers[field.labelField] = TextEditingController();
       }
     }
   }
@@ -32,14 +32,14 @@ class FormHelper {
     errors.clear();
     for (var field in fields) {
       if (field.fieldType == ConstantsFormField.TYPE_INPUT_DROPDOWN) {
-        final value = dropdownValues[field.idTag];
+        final value = dropdownValues[field.labelField];
         if (field.isRequired && (value == null || value.isEmpty)) {
-          errors[field.idTag] = '${field.label} is required';
+          errors[field.labelField] = '${field.labelField} is required';
         }
       } else {
-        final value = controllers[field.idTag]?.text ?? '';
+        final value = controllers[field.labelField]?.text ?? '';
         if (field.isRequired && value.isEmpty) {
-          errors[field.idTag] = '${field.label} is required';
+          errors[field.labelField] = '${field.labelField} is required';
         }
       }
     }

@@ -21,98 +21,95 @@ class FormInformationScreenState extends State<FormInformationScreen> {
   late FormHelper formHelper;
   Map<String, String?> errors = {};
   FormFieldConfig configFirstName = FormFieldConfig(
-    idTag: 'FirstName',
-    label: 'Nama Depan',
+    labelField: 'First Name',
     isRequired: true,
     hint: 'Enter your name',
     keyboardType: TextInputType.name,
     fieldType: ConstantsFormField.TYPE_INPUT_TEXT,
   );
   FormFieldConfig configLastName = FormFieldConfig(
-    idTag: 'LastName',
+    labelField: 'Last Name',
     isRequired: true,
-    label: 'Nama Belakang',
     hint: 'Enter your name',
     keyboardType: TextInputType.name,
     fieldType: ConstantsFormField.TYPE_INPUT_TEXT,
   );
   FormFieldConfig configEmail = FormFieldConfig(
-    idTag: 'Email',
-    label: 'Email',
+    labelField: 'Email',
     isRequired: true,
     hint: 'Enter your email',
     icon: Icons.email,
-   
+
     keyboardType: TextInputType.emailAddress,
     fieldType: ConstantsFormField.TYPE_INPUT_TEXT,
   );
 
   FormFieldConfig configStatus = FormFieldConfig(
-    idTag: 'Status',
-    label: 'Status',
+    labelField: 'Status',
     hint: 'Pilih Status',
     isRequired: true,
     fieldType: ConstantsFormField.TYPE_INPUT_DROPDOWN,
-   
+
     dropdownOptions: [
       DropdownOption(id: '1', name: 'Single'),
       DropdownOption(id: '3', name: 'Menikah'),
     ],
   );
   FormFieldConfig configSex = FormFieldConfig(
-    idTag: 'Jenis Kelamin',
-    label: 'Jenis Kelamin',
+    labelField: 'Jenis Kelamin',
     hint: 'Pilih Jenis Kelamin',
     isRequired: true,
     fieldType: ConstantsFormField.TYPE_INPUT_DROPDOWN,
-   
+
     dropdownOptions: [
       DropdownOption(id: '1', name: 'Laki-Laki'),
       DropdownOption(id: '3', name: 'Perempuan'),
     ],
   );
+  FormFieldConfig configBirthPlace = FormFieldConfig(
+    labelField: 'Tempat Lahir',
+    hint: 'Input Tempat Lahir',
+    isRequired: true,
+    fieldType: ConstantsFormField.TYPE_INPUT_TEXT,
+  );
   FormFieldConfig configDOB = FormFieldConfig(
-    idTag: 'Tanggal Lahir',
-    label: 'Tanggal Lahir',
+    labelField: 'Tanggal Lahir',
     hint: 'Pilih Tanggal',
     isRequired: true,
     fieldType: ConstantsFormField.TYPE_INPUT_TEXT,
-   
   );
 
   FormFieldConfig configAddress = FormFieldConfig(
-    idTag: 'Alamat Lengkap',
-    label: 'Alamat Lengkap',
+    labelField: 'Alamat Lengkap',
     hint: 'Input Alamat Lengkap',
     isRequired: true,
     helper: 'Cth : Jln. KH. Zainul Arifin',
     fieldType: ConstantsFormField.TYPE_INPUT_TEXT,
-   
+
     icon: Icons.location_on,
   );
   FormFieldConfig configPostalCode = FormFieldConfig(
-    idTag: 'Kode Pos',
-    helper: 'Kode Pos',
-    isRequired: true,
+    labelField: 'Kode Pos',
+    helper: 'Kode Pos (Optional)',
+    isShowLabel: false,
     hint: 'Input Kode Pos',
     fieldType: ConstantsFormField.TYPE_INPUT_TEXT,
-   
   );
   FormFieldConfig configSubdistrict = FormFieldConfig(
-    idTag: 'Kecamatan',
+    labelField: 'Kecamatan',
     helper: 'Kecamatan',
     isRequired: true,
+    isShowLabel: false,
     hint: 'Input Kecamatan',
     fieldType: ConstantsFormField.TYPE_INPUT_TEXT,
-   
   );
   FormFieldConfig configProvince = FormFieldConfig(
-    idTag: 'Provinsi',
+    labelField: 'Provinsi',
     helper: 'Provinsi',
     isRequired: true,
     hint: 'Pilih Provinsi',
     fieldType: ConstantsFormField.TYPE_INPUT_SEARCH_DROPDOWN,
-   
+
     dropdownOptions: [
       DropdownOption(id: '1', name: 'Aceh'),
       DropdownOption(id: '2', name: 'Sumatera Utara'),
@@ -123,19 +120,16 @@ class FormInformationScreenState extends State<FormInformationScreen> {
     ],
   );
   FormFieldConfig configAccountType = FormFieldConfig(
-    idTag: 'Acc Type',
-    label: 'Jenis Rekening',
+    labelField: 'Jenis Rekening',
     isRequired: true,
     hint: 'Pilih Jenis Rekening',
     fieldType: ConstantsFormField.TYPE_INPUT_DROPDOWN,
-   
+
     dropdownOptions: [
       DropdownOption(id: '1', name: 'Rekening Terbuka'),
       DropdownOption(id: '3', name: 'Rekening Test'),
     ],
   );
-
-
 
   List<FormFieldConfig> fieldsToValidate = [];
 
@@ -148,7 +142,7 @@ class FormInformationScreenState extends State<FormInformationScreen> {
   }
 
   String getInfo() {
-    return formHelper.getText(fieldsToValidate[0].idTag) ?? '-';
+    return formHelper.getText(fieldsToValidate[0].labelField) ?? '-';
   }
 
   @override
@@ -161,6 +155,7 @@ class FormInformationScreenState extends State<FormInformationScreen> {
     fieldsToValidate.add(configStatus);
     fieldsToValidate.add(configAddress);
     fieldsToValidate.add(configSubdistrict);
+    fieldsToValidate.add(configBirthPlace);
     fieldsToValidate.add(configPostalCode);
     fieldsToValidate.add(configProvince);
     fieldsToValidate.add(configAccountType);
@@ -182,12 +177,13 @@ class FormInformationScreenState extends State<FormInformationScreen> {
     if (formHelper.isValid) {
       for (var field in fieldsToValidate) {
         final value =
-        (field.fieldType == ConstantsFormField.TYPE_INPUT_DROPDOWN ||
-            field.fieldType == ConstantsFormField.TYPE_INPUT_SEARCH_DROPDOWN)
-            ? formHelper.getDropdownValue(field.idTag)
-            : formHelper.getText(field.idTag);
+            (field.fieldType == ConstantsFormField.TYPE_INPUT_DROPDOWN ||
+                    field.fieldType ==
+                        ConstantsFormField.TYPE_INPUT_SEARCH_DROPDOWN)
+                ? formHelper.getDropdownValue(field.labelField)
+                : formHelper.getText(field.labelField);
 
-        print('${field.label}: $value');
+        print('${field.labelField}: $value');
       }
     }
   }
@@ -203,7 +199,7 @@ class FormInformationScreenState extends State<FormInformationScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Informasi",
+                "Data Nasabah",
                 textAlign: TextAlign.start,
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
@@ -219,53 +215,59 @@ class FormInformationScreenState extends State<FormInformationScreen> {
                     child: InputFieldTextWidget(
                       fieldConfig: configFirstName,
                       controller:
-                          formHelper.controllers[configFirstName.idTag]!,
-                      errorText: formHelper.errors[configFirstName.idTag],
+                          formHelper.controllers[configFirstName.labelField]!,
+                      errorText: formHelper.errors[configFirstName.labelField],
                     ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
                     child: InputFieldTextWidget(
                       fieldConfig: configLastName,
-                      controller: formHelper.controllers[configLastName.idTag]!,
-                      errorText: formHelper.errors[configLastName.idTag],
+                      controller:
+                          formHelper.controllers[configLastName.labelField]!,
+                      errorText: formHelper.errors[configLastName.labelField],
                     ),
                   ),
                 ],
               ),
+              InputFieldTextWidget(
+                fieldConfig: configBirthPlace,
+                controller: formHelper.controllers[configBirthPlace.labelField]!,
+                errorText: formHelper.errors[configBirthPlace.labelField],
+              ),
 
               InputFieldDatePicker(
                 fieldConfig: configDOB,
-                controller: formHelper.controllers[configDOB.idTag]!,
-                errorText: formHelper.errors[configDOB.idTag],
+                controller: formHelper.controllers[configDOB.labelField]!,
+                errorText: formHelper.errors[configDOB.labelField],
               ),
 
               InputFieldDropdownWidget(
                 fieldConfig: configStatus,
-                selectedValue: formHelper.dropdownValues[configStatus.idTag],
-                errorText: formHelper.errors[configStatus.idTag],
+                selectedValue:
+                    formHelper.dropdownValues[configStatus.labelField],
+                errorText: formHelper.errors[configStatus.labelField],
                 onChanged: (value) {
                   setState(() {
-                    formHelper.setDropdownValue(configStatus.idTag, value);
+                    formHelper.setDropdownValue(configStatus.labelField, value);
                   });
                 },
               ),
               InputFieldDropdownWidget(
                 fieldConfig: configSex,
-                selectedValue: formHelper.dropdownValues[configSex.idTag],
-                errorText: formHelper.errors[configSex.idTag],
+                selectedValue: formHelper.dropdownValues[configSex.labelField],
+                errorText: formHelper.errors[configSex.labelField],
                 onChanged: (value) {
                   setState(() {
-                    formHelper.setDropdownValue(configSex.idTag, value);
+                    formHelper.setDropdownValue(configSex.labelField, value);
                   });
                 },
               ),
 
               InputFieldTextWidget(
                 fieldConfig: configAddress,
-                controller:
-                formHelper.controllers[configAddress.idTag]!,
-                errorText: formHelper.errors[configAddress.idTag],
+                controller: formHelper.controllers[configAddress.labelField]!,
+                errorText: formHelper.errors[configAddress.labelField],
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -274,16 +276,18 @@ class FormInformationScreenState extends State<FormInformationScreen> {
                     child: InputFieldTextWidget(
                       fieldConfig: configSubdistrict,
                       controller:
-                      formHelper.controllers[configSubdistrict.idTag]!,
-                      errorText: formHelper.errors[configSubdistrict.idTag],
+                          formHelper.controllers[configSubdistrict.labelField]!,
+                      errorText:
+                          formHelper.errors[configSubdistrict.labelField],
                     ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
                     child: InputFieldTextWidget(
                       fieldConfig: configPostalCode,
-                      controller: formHelper.controllers[configPostalCode.idTag]!,
-                      errorText: formHelper.errors[configPostalCode.idTag],
+                      controller:
+                          formHelper.controllers[configPostalCode.labelField]!,
+                      errorText: formHelper.errors[configPostalCode.labelField],
                     ),
                   ),
                 ],
@@ -291,13 +295,13 @@ class FormInformationScreenState extends State<FormInformationScreen> {
 
               InputFieldSearchDropdown(
                 fieldConfig: configProvince,
-                controller: formHelper.controllers[configProvince.idTag]!,
-                errorText: formHelper.errors[configProvince.idTag],
+                controller: formHelper.controllers[configProvince.labelField]!,
+                errorText: formHelper.errors[configProvince.labelField],
                 isShowId: false,
                 onChanged: (value) {
                   setState(() {
                     formHelper.setDropdownValue(
-                      configProvince.idTag,
+                      configProvince.labelField,
                       value.name,
                     );
                   });
@@ -305,11 +309,15 @@ class FormInformationScreenState extends State<FormInformationScreen> {
               ),
               InputFieldDropdownWidget(
                 fieldConfig: configAccountType,
-                selectedValue: formHelper.dropdownValues[configAccountType.idTag],
-                errorText: formHelper.errors[configAccountType.idTag],
+                selectedValue:
+                    formHelper.dropdownValues[configAccountType.labelField],
+                errorText: formHelper.errors[configAccountType.labelField],
                 onChanged: (value) {
                   setState(() {
-                    formHelper.setDropdownValue(configAccountType.idTag, value);
+                    formHelper.setDropdownValue(
+                      configAccountType.labelField,
+                      value,
+                    );
                   });
                 },
               ),

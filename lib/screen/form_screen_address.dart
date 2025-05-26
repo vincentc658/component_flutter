@@ -19,24 +19,22 @@ class FormScreenAddressState extends State<FormScreenAddress> {
   late FormHelper formHelper;
   Map<String, String?> errors = {};
   FormFieldConfig configFirstName = FormFieldConfig(
-    idTag: 'FirstName',
-    label: 'First Name',
-    hint: 'Enter your name',
+    labelField: 'Alamat (sesuai tanda pengenal)',
+    hint: 'Input Alamat',
     isRequired: true,
-    keyboardType: TextInputType.name,
+    isShowLabel: true,
+    keyboardType: TextInputType.streetAddress,
     fieldType: ConstantsFormField.TYPE_INPUT_TEXT,
   );
   FormFieldConfig configLastName = FormFieldConfig(
-    idTag: 'LastName',
-    label: 'Last Name',
+    labelField: 'LastName',
     hint: 'Enter your name',
     isRequired: true,
     keyboardType: TextInputType.name,
     fieldType: ConstantsFormField.TYPE_INPUT_TEXT,
   );
   FormFieldConfig configEmail = FormFieldConfig(
-    idTag: 'Email',
-    label: 'Email',
+    labelField: 'Email',
     hint: 'Enter your email',
     icon: Icons.email,
     keyboardType: TextInputType.emailAddress,
@@ -44,8 +42,7 @@ class FormScreenAddressState extends State<FormScreenAddress> {
     fieldType: ConstantsFormField.TYPE_INPUT_TEXT,
   );
   FormFieldConfig configPassword = FormFieldConfig(
-    idTag: 'Password',
-    label: 'Password',
+    labelField: 'Password',
     hint: 'Enter your password',
     icon: Icons.lock,
     keyboardType: TextInputType.visiblePassword,
@@ -53,8 +50,7 @@ class FormScreenAddressState extends State<FormScreenAddress> {
     fieldType: ConstantsFormField.TYPE_INPUT_TEXT,
   );
   FormFieldConfig configStatus = FormFieldConfig(
-    idTag: 'Status',
-    label: 'Status',
+    labelField: 'Status',
     hint: 'Select your Status',
     fieldType: ConstantsFormField.TYPE_INPUT_DROPDOWN,
     isRequired: true,
@@ -89,9 +85,9 @@ class FormScreenAddressState extends State<FormScreenAddress> {
     formHelper = FormHelper(fieldsToValidate);
     for (var field in fieldsToValidate) {
       if (field.fieldType == ConstantsFormField.TYPE_INPUT_DROPDOWN) {
-        dropdownValues[field.idTag] = null;
+        dropdownValues[field.labelField] = null;
       } else {
-        controllers[field.idTag] = TextEditingController();
+        controllers[field.labelField] = TextEditingController();
       }
     }
   }
@@ -113,9 +109,9 @@ class FormScreenAddressState extends State<FormScreenAddress> {
       for (var field in fieldsToValidate) {
         final value =
             field.fieldType == ConstantsFormField.TYPE_INPUT_DROPDOWN
-                ? formHelper.getDropdownValue(field.idTag)
-                : formHelper.getText(field.idTag);
-        print('${field.label}: $value');
+                ? formHelper.getDropdownValue(field.labelField)
+                : formHelper.getText(field.labelField);
+        print('${field.labelField}: $value');
       }
     }
   }
@@ -135,16 +131,16 @@ class FormScreenAddressState extends State<FormScreenAddress> {
                   Expanded(
                     child: InputFieldTextWidget(
                       fieldConfig: configFirstName,
-                      controller: formHelper.controllers[configFirstName.idTag]!,
-                      errorText: formHelper.errors[configFirstName.idTag],
+                      controller: formHelper.controllers[configFirstName.labelField]!,
+                      errorText: formHelper.errors[configFirstName.labelField],
                     ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
                     child: InputFieldTextWidget(
                       fieldConfig: configLastName,
-                      controller: formHelper.controllers[configLastName.idTag]!,
-                      errorText: formHelper.errors[configLastName.idTag],
+                      controller: formHelper.controllers[configLastName.labelField]!,
+                      errorText: formHelper.errors[configLastName.labelField],
                     ),
                   ),
                 ],
@@ -152,21 +148,21 @@ class FormScreenAddressState extends State<FormScreenAddress> {
 
               InputFieldTextWidget(
                 fieldConfig: configEmail,
-                controller: formHelper.controllers[configEmail.idTag]!,
-                errorText: formHelper.errors[configEmail.idTag],
+                controller: formHelper.controllers[configEmail.labelField]!,
+                errorText: formHelper.errors[configEmail.labelField],
               ),
               InputFieldTextWidget(
                 fieldConfig: configPassword,
-                controller: formHelper.controllers[configPassword.idTag]!,
-                errorText: formHelper.errors[configPassword.idTag],
+                controller: formHelper.controllers[configPassword.labelField]!,
+                errorText: formHelper.errors[configPassword.labelField],
               ),
               InputFieldDropdownWidget(
                 fieldConfig: configStatus,
-                selectedValue: formHelper.dropdownValues[configStatus.idTag],
-                errorText: formHelper.errors[configStatus.idTag],
+                selectedValue: formHelper.dropdownValues[configStatus.labelField],
+                errorText: formHelper.errors[configStatus.labelField],
                 onChanged: (value) {
                   setState(() {
-                    formHelper.setDropdownValue(configStatus.idTag, value);
+                    formHelper.setDropdownValue(configStatus.labelField, value);
                   });
                 },
               ),

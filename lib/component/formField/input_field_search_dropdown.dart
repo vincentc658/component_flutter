@@ -12,6 +12,7 @@ class InputFieldSearchDropdown extends StatefulWidget {
   final IconData? icon;
   final bool isRequired;
   final bool isShowId;
+  final bool isShowLabel;
   final TextInputType keyboardType;
   final List<DropdownOption> items;
   DropdownOption? selectedValue;
@@ -26,12 +27,13 @@ class InputFieldSearchDropdown extends StatefulWidget {
     required this.isShowId,
     this.selectedValue,
     this.errorText,
-  }) : label = fieldConfig.label,
+  }) : label = fieldConfig.labelField,
        hintText = fieldConfig.hint,
        helperText = fieldConfig.helper,
        icon = fieldConfig.icon,
        items = fieldConfig.dropdownOptions ?? [],
        isRequired = fieldConfig.isRequired,
+        isShowLabel = fieldConfig.isShowLabel,
        keyboardType = fieldConfig.keyboardType ?? TextInputType.text,
        super(key: key);
 
@@ -203,15 +205,16 @@ class _InputFieldSearchDropdownState extends State<InputFieldSearchDropdown> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  if(widget.isShowLabel)
                   Text(
                     widget.label!,
                     style: theme.textTheme.labelLarge?.copyWith(
-                      color: ConstantsColor.PRIMARY.shade700,
+                      color: ConstantsColor.PRIMARY.shade900,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   const SizedBox(width: 4),
-                  if (widget.isRequired)
+                  if (widget.isRequired && widget.isShowLabel)
                     const Text(
                       "*",
                       style: TextStyle(fontSize: 14, color: Colors.red),

@@ -12,6 +12,7 @@ class InputFieldDatePicker extends StatefulWidget {
   final TextEditingController controller;
   final bool obscureText;
   final bool isRequired;
+  final bool isShowLabel;
   final TextInputType keyboardType;
 
   InputFieldDatePicker({
@@ -19,12 +20,13 @@ class InputFieldDatePicker extends StatefulWidget {
     required FormFieldConfig fieldConfig,
     required this.controller,
     this.errorText,
-  })  : label = fieldConfig.label,
+  })  : label = fieldConfig.labelField,
         hintText = fieldConfig.hint,
         helperText = fieldConfig.helper,
         icon = fieldConfig.icon,
         obscureText = fieldConfig.obscureText,
         isRequired = fieldConfig.isRequired,
+        isShowLabel = fieldConfig.isShowLabel,
         keyboardType = fieldConfig.keyboardType ?? TextInputType.text,
         super(key: key);
 
@@ -77,14 +79,15 @@ class _InputFieldDatePickerState extends State<InputFieldDatePicker> {
             padding: const EdgeInsets.only(bottom: 8),
             child: Row(
               children: [
+                if(widget.isShowLabel)
                 Text(
                   widget.label!,
                   style: theme.textTheme.labelLarge?.copyWith(
-                    color: ConstantsColor.PRIMARY.shade700,
+                    color: ConstantsColor.PRIMARY.shade900,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                if (widget.isRequired)
+                if (widget.isRequired && widget.isShowLabel)
                   const Text(
                     " *",
                     style: TextStyle(fontSize: 14, color: Colors.red),

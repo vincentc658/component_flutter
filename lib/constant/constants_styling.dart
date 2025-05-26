@@ -19,5 +19,4 @@ class ConstantsStyling{
     color: Colors.red.shade700,
     fontSize: 13,
   );
-
 }

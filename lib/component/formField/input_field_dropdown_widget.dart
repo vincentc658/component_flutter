@@ -14,6 +14,7 @@ class InputFieldDropdownWidget extends StatelessWidget {
   final String? hintText;
   final String? errorText;
   final bool isRequired;
+  final bool isShowLabel;
   final IconData? icon;
 
   InputFieldDropdownWidget({
@@ -22,10 +23,11 @@ class InputFieldDropdownWidget extends StatelessWidget {
     required this.selectedValue,
     required this.onChanged,
     this.errorText,
-  }) : label = fieldConfig.label,
+  }) : label = fieldConfig.labelField,
        hintText = fieldConfig.hint,
        helperText = fieldConfig.helper,
        isRequired = fieldConfig.isRequired,
+       isShowLabel = fieldConfig.isShowLabel,
        icon = fieldConfig.icon,
        options = fieldConfig.dropdownOptions ?? [],
        super(key: key);
@@ -41,15 +43,16 @@ class InputFieldDropdownWidget extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  if(isShowLabel)
                   Text(
                     label!,
                     style: theme.textTheme.labelLarge?.copyWith(
-                      color: ConstantsColor.PRIMARY.shade700,
+                      color: ConstantsColor.PRIMARY.shade900,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   const SizedBox(width: 4),
-                  if (isRequired)
+                    if (isRequired && isShowLabel)
                     const Text(
                       "*",
                       style: TextStyle(fontSize: 14, color: Colors.red),
