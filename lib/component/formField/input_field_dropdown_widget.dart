@@ -5,7 +5,7 @@ import '../../constant/constants_styling.dart';
 import 'dropdown_option.dart';
 import 'form_field_config.dart';
 
-class InputFieldDropdownWidget extends StatelessWidget {
+class InputFieldDropdownWidget extends StatefulWidget {
   final String? selectedValue;
   final List<DropdownOption> options;
   final ValueChanged<String?> onChanged;
@@ -20,39 +20,59 @@ class InputFieldDropdownWidget extends StatelessWidget {
   InputFieldDropdownWidget({
     Key? key,
     required FormFieldConfig fieldConfig,
-    required this.selectedValue,
+    this.selectedValue,
     required this.onChanged,
     this.errorText,
-  }) : label = fieldConfig.labelField,
-       hintText = fieldConfig.hint,
-       helperText = fieldConfig.helper,
-       isRequired = fieldConfig.isRequired,
-       isShowLabel = fieldConfig.isShowLabel,
-       icon = fieldConfig.icon,
-       options = fieldConfig.dropdownOptions ?? [],
-       super(key: key);
+  })  : label = fieldConfig.labelField,
+        hintText = fieldConfig.hint,
+        helperText = fieldConfig.helper,
+        isRequired = fieldConfig.isRequired,
+        isShowLabel = fieldConfig.isShowLabel,
+        icon = fieldConfig.icon,
+        options = fieldConfig.dropdownOptions ?? [],
+        super(key: key);
+
+  @override
+  State<InputFieldDropdownWidget> createState() => _InputFieldDropdownWidgetState();
+}
+
+class _InputFieldDropdownWidgetState extends State<InputFieldDropdownWidget> {
+  String? _currentValue;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentValue = widget.selectedValue;
+  }
+
+  void _handleChange(String? value) {
+    setState(() {
+      _currentValue = value;
+    });
+    widget.onChanged(value);
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Column(
       children: [
-        if (label != null)
+        if (widget.label != null)
           Column(
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  if(isShowLabel)
-                  Text(
-                    label!,
-                    style: theme.textTheme.labelLarge?.copyWith(
-                      color: ConstantsColor.PRIMARY.shade900,
-                      fontWeight: FontWeight.w600,
+                  if (widget.isShowLabel)
+                    Text(
+                      widget.label!,
+                      style: theme.textTheme.labelLarge?.copyWith(
+                        color: ConstantsColor.PRIMARY.shade900,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
                   const SizedBox(width: 4),
-                    if (isRequired && isShowLabel)
+                  if (widget.isRequired && widget.isShowLabel)
                     const Text(
                       "*",
                       style: TextStyle(fontSize: 14, color: Colors.red),
@@ -63,26 +83,25 @@ class InputFieldDropdownWidget extends StatelessWidget {
             ],
           ),
         DropdownButtonFormField<String>(
-          value: selectedValue,
+          value: _currentValue,
           hint: Text(
-            hintText ?? '',
+            widget.hintText ?? '',
             style: const TextStyle(color: Colors.grey),
           ),
           icon: const Icon(Icons.arrow_drop_down),
           decoration: InputDecoration(
-            prefixIcon:
-                icon != null
-                    ? Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 8),
-                      child: Icon(icon, color: ConstantsColor.PRIMARY),
-                    )
-                    : null,
+            prefixIcon: widget.icon != null
+                ? Padding(
+              padding: const EdgeInsets.only(left: 10, right: 8),
+              child: Icon(widget.icon, color: ConstantsColor.PRIMARY),
+            )
+                : null,
             contentPadding: const EdgeInsets.symmetric(
               vertical: 14,
               horizontal: 16,
             ),
-            errorText: errorText,
-            errorStyle:ConstantsStyling.textStyleError,
+            errorText: widget.errorText,
+            errorStyle: ConstantsStyling.textStyleError,
             filled: true,
             fillColor: Colors.white,
             border: ConstantsStyling.enabledBorder,
@@ -90,21 +109,18 @@ class InputFieldDropdownWidget extends StatelessWidget {
             focusedBorder: ConstantsStyling.focusedBorder,
             errorBorder: ConstantsStyling.errorBorder,
           ),
-          items:
-              options.map((status) {
-                return DropdownMenuItem<String>(
-                  value: status.name,
-                  child: Text(
-                    status.name,
-                  ),
-                );
-              }).toList(),
-          onChanged: onChanged,
+          items: widget.options.map((status) {
+            return DropdownMenuItem<String>(
+              value: status.name,
+              child: Text(status.name),
+            );
+          }).toList(),
+          onChanged: _handleChange,
         ),
-        if (helperText != null) ...[
+        if (widget.helperText != null) ...[
           const SizedBox(height: 6),
           Text(
-            helperText!,
+            widget.helperText!,
             style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
           ),
         ],

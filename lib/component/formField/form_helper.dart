@@ -13,7 +13,8 @@ class FormHelper {
     for (var field in fields) {
       if (field.fieldType == ConstantsFormField.TYPE_INPUT_DROPDOWN) {
         dropdownValues[field.labelField] = null;
-      } else if (field.fieldType == ConstantsFormField.TYPE_INPUT_SEARCH_DROPDOWN) {
+      } else if (field.fieldType ==
+          ConstantsFormField.TYPE_INPUT_SEARCH_DROPDOWN) {
         dropdownValues[field.labelField] = null;
         controllers[field.labelField] = TextEditingController();
       } else {
@@ -31,7 +32,8 @@ class FormHelper {
   void validate() {
     errors.clear();
     for (var field in fields) {
-      if (field.fieldType == ConstantsFormField.TYPE_INPUT_DROPDOWN) {
+      if (field.fieldType == ConstantsFormField.TYPE_INPUT_DROPDOWN ||
+          field.fieldType == ConstantsFormField.TYPE_INPUT_RADIO_GROUP) {
         final value = dropdownValues[field.labelField];
         if (field.isRequired && (value == null || value.isEmpty)) {
           errors[field.labelField] = '${field.labelField} is required';

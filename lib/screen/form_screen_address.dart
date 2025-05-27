@@ -6,6 +6,7 @@ import 'package:research_component/constant/constants_form_field.dart';
 import '../component/formField/dropdown_option.dart';
 import '../component/formField/form_field_config.dart';
 import '../component/formField/form_helper.dart';
+import '../component/formField/input_field_search_dropdown.dart';
 import '../component/formField/input_field_text_widget.dart';
 import '../constant/constants_color.dart';
 
@@ -18,47 +19,58 @@ class FormScreenAddress extends StatefulWidget {
 class FormScreenAddressState extends State<FormScreenAddress> {
   late FormHelper formHelper;
   Map<String, String?> errors = {};
-  FormFieldConfig configFirstName = FormFieldConfig(
-    labelField: 'Alamat (sesuai tanda pengenal)',
-    hint: 'Input Alamat',
-    isRequired: true,
-    isShowLabel: true,
-    keyboardType: TextInputType.streetAddress,
+  FormFieldConfig configAddress = FormFieldConfig(
+    labelField: 'Alamat Lengkap',
+    hint: 'Input Alamat Lengkap',
+
+    helper: 'Cth : Jln. KH. Zainul Arifin',
+    fieldType: ConstantsFormField.TYPE_INPUT_TEXT,
+
+    icon: Icons.location_on,
+  );
+  FormFieldConfig configPostalCode = FormFieldConfig(
+    labelField: 'Kode Pos',
+    helper: 'Kode Pos (Optional)',
+    isShowLabel: false,
+    hint: 'Input Kode Pos',
     fieldType: ConstantsFormField.TYPE_INPUT_TEXT,
   );
-  FormFieldConfig configLastName = FormFieldConfig(
-    labelField: 'LastName',
-    hint: 'Enter your name',
-    isRequired: true,
-    keyboardType: TextInputType.name,
+  FormFieldConfig configSubdistrict = FormFieldConfig(
+    labelField: 'Kecamatan',
+    helper: 'Kecamatan',
+
+    isShowLabel: false,
+    hint: 'Input Kecamatan',
     fieldType: ConstantsFormField.TYPE_INPUT_TEXT,
   );
-  FormFieldConfig configEmail = FormFieldConfig(
-    labelField: 'Email',
-    hint: 'Enter your email',
-    icon: Icons.email,
-    keyboardType: TextInputType.emailAddress,
+  FormFieldConfig configProvince = FormFieldConfig(
+    labelField: 'Provinsi',
+    helper: 'Provinsi',
+    isShowLabel: false,
     isRequired: true,
-    fieldType: ConstantsFormField.TYPE_INPUT_TEXT,
-  );
-  FormFieldConfig configPassword = FormFieldConfig(
-    labelField: 'Password',
-    hint: 'Enter your password',
-    icon: Icons.lock,
-    keyboardType: TextInputType.visiblePassword,
-    obscureText: true,
-    fieldType: ConstantsFormField.TYPE_INPUT_TEXT,
-  );
-  FormFieldConfig configStatus = FormFieldConfig(
-    labelField: 'Status',
-    hint: 'Select your Status',
-    fieldType: ConstantsFormField.TYPE_INPUT_DROPDOWN,
-    isRequired: true,
-    icon: Icons.filter_alt,
+    hint: 'Pilih Provinsi',
+    fieldType: ConstantsFormField.TYPE_INPUT_SEARCH_DROPDOWN,
+
     dropdownOptions: [
-      DropdownOption(id: '1', name: 'Testing'),
-      DropdownOption(id: '3', name: 'Testingting'),
-      DropdownOption(id: '2', name: 'Testing 2'),
+      DropdownOption(id: '1', name: 'Aceh'),
+      DropdownOption(id: '2', name: 'Sumatera Utara'),
+      DropdownOption(id: '3', name: 'Sumatera Barat'),
+      DropdownOption(id: '4', name: 'Sumatera Selatan'),
+      DropdownOption(id: '5', name: 'Jambi'),
+      DropdownOption(id: '5', name: 'Pekan Baru'),
+    ],
+  );
+  FormFieldConfig configStatusResidence = FormFieldConfig(
+    labelField: 'Status Tempat Tinggal',
+    isShowLabel: false,
+    fieldType: ConstantsFormField.TYPE_INPUT_RADIO_GROUP,
+    dropdownOptions: [
+      DropdownOption(id: '1', name: 'Aceh'),
+      DropdownOption(id: '2', name: 'Sumatera Utara'),
+      DropdownOption(id: '3', name: 'Sumatera Barat'),
+      DropdownOption(id: '4', name: 'Sumatera Selatan'),
+      DropdownOption(id: '5', name: 'Jambi'),
+      DropdownOption(id: '5', name: 'Pekan Baru'),
     ],
   );
 
@@ -76,12 +88,10 @@ class FormScreenAddressState extends State<FormScreenAddress> {
   @override
   void initState() {
     super.initState();
-    fieldsToValidate.add(configFirstName);
-    fieldsToValidate.add(configLastName);
-    fieldsToValidate.add(configEmail);
-    fieldsToValidate.add(configPassword);
-    fieldsToValidate.add(configStatus);
-
+    fieldsToValidate.add(configAddress);
+    fieldsToValidate.add(configSubdistrict);
+    fieldsToValidate.add(configPostalCode);
+    fieldsToValidate.add(configProvince);
     formHelper = FormHelper(fieldsToValidate);
     for (var field in fieldsToValidate) {
       if (field.fieldType == ConstantsFormField.TYPE_INPUT_DROPDOWN) {
@@ -120,49 +130,61 @@ class FormScreenAddressState extends State<FormScreenAddress> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white,title: Text("Alamat", style: TextStyle(fontWeight:FontWeight.w700, fontSize: 24,color: ConstantsColor.PRIMARY ))),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16),
           child: Column(
             children: [
+              Text(
+                "Alamat",
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 28,
+                  color: ConstantsColor.PRIMARY,
+                ),
+              ),
+              SizedBox(height: 16),
+              InputFieldTextWidget(
+                fieldConfig: configAddress,
+                controller: formHelper.controllers[configAddress.labelField]!,
+                errorText: formHelper.errors[configAddress.labelField],
+              ),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
                     child: InputFieldTextWidget(
-                      fieldConfig: configFirstName,
-                      controller: formHelper.controllers[configFirstName.labelField]!,
-                      errorText: formHelper.errors[configFirstName.labelField],
+                      fieldConfig: configSubdistrict,
+                      controller:
+                      formHelper.controllers[configSubdistrict.labelField]!,
+                      errorText:
+                      formHelper.errors[configSubdistrict.labelField],
                     ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
                     child: InputFieldTextWidget(
-                      fieldConfig: configLastName,
-                      controller: formHelper.controllers[configLastName.labelField]!,
-                      errorText: formHelper.errors[configLastName.labelField],
+                      fieldConfig: configPostalCode,
+                      controller:
+                      formHelper.controllers[configPostalCode.labelField]!,
+                      errorText: formHelper.errors[configPostalCode.labelField],
                     ),
                   ),
                 ],
               ),
 
-              InputFieldTextWidget(
-                fieldConfig: configEmail,
-                controller: formHelper.controllers[configEmail.labelField]!,
-                errorText: formHelper.errors[configEmail.labelField],
-              ),
-              InputFieldTextWidget(
-                fieldConfig: configPassword,
-                controller: formHelper.controllers[configPassword.labelField]!,
-                errorText: formHelper.errors[configPassword.labelField],
-              ),
-              InputFieldDropdownWidget(
-                fieldConfig: configStatus,
-                selectedValue: formHelper.dropdownValues[configStatus.labelField],
-                errorText: formHelper.errors[configStatus.labelField],
+              InputFieldSearchDropdown(
+                fieldConfig: configProvince,
+                controller: formHelper.controllers[configProvince.labelField]!,
+                errorText: formHelper.errors[configProvince.labelField],
+                isShowId: false,
                 onChanged: (value) {
                   setState(() {
-                    formHelper.setDropdownValue(configStatus.labelField, value);
+                    formHelper.setDropdownValue(
+                      configProvince.labelField,
+                      value.name,
+                    );
                   });
                 },
               ),

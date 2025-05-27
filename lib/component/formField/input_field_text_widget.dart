@@ -77,13 +77,16 @@ class InputFieldTextWidget extends StatelessWidget {
                     )
                     : null,
             hintText: hintText,
+            hintStyle: const TextStyle(
+              color: Colors.grey,
+              overflow: TextOverflow.ellipsis, // <-- ini penting
+            ),
             errorText: errorText,
             errorStyle: TextStyle(
               color: Colors.red.shade700,
               fontSize: 13,
               fontWeight: FontWeight.w500,
             ),
-            hintStyle: const TextStyle(color: Colors.grey),
             contentPadding: const EdgeInsets.symmetric(
               vertical: 14,
               horizontal: 16,
