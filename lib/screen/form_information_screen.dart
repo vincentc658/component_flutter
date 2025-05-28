@@ -113,7 +113,7 @@ class FormInformationScreenState extends State<FormInformationScreen> {
       DropdownOption(id: '1', name: 'KTP'),
       DropdownOption(id: '2', name: 'SIM'),
       DropdownOption(id: '3', name: 'Paspor'),
-      DropdownOption(id: '4', name: 'KITAS'),
+      DropdownOption(id: '4', name: 'KITAS/KITAP'),
     ],
   );
   FormFieldConfig configIdNumber = FormFieldConfig(
@@ -151,6 +151,7 @@ class FormInformationScreenState extends State<FormInformationScreen> {
     fieldsToValidate.add(configMotherName);
     fieldsToValidate.add(configIdNumber);
     fieldsToValidate.add(configIdType);
+    fieldsToValidate.add(configReligion);
 
     formHelper = FormHelper(fieldsToValidate);
   }
@@ -270,7 +271,7 @@ class FormInformationScreenState extends State<FormInformationScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Flexible(
-                    flex: 1,
+                    flex: 2,
                     child: InputFieldDropdownWidget(
                       fieldConfig: configIdType,
                       errorText: formHelper.errors[configIdType.labelField],
@@ -278,7 +279,7 @@ class FormInformationScreenState extends State<FormInformationScreen> {
                         setState(() {
                           formHelper.setDropdownValue(
                             configIdType.labelField,
-                            value,
+                            value?.name,
                           );
                         });
                       },
@@ -286,7 +287,7 @@ class FormInformationScreenState extends State<FormInformationScreen> {
                   ),
                   const SizedBox(width: 16),
                   Flexible(
-                    flex: 2,
+                    flex: 3,
                     child: InputFieldTextWidget(
                       fieldConfig: configIdNumber,
                       controller:
@@ -311,7 +312,7 @@ class FormInformationScreenState extends State<FormInformationScreen> {
                   setState(() {
                     formHelper.setDropdownValue(
                       configReligion.labelField,
-                      value,
+                      value?.name,
                     );
                   });
                 },

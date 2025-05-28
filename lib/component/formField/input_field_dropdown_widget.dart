@@ -6,9 +6,9 @@ import 'dropdown_option.dart';
 import 'form_field_config.dart';
 
 class InputFieldDropdownWidget extends StatefulWidget {
-  final String? selectedValue;
+  final DropdownOption? selectedValue;
   final List<DropdownOption> options;
-  final ValueChanged<String?> onChanged;
+  final ValueChanged<DropdownOption?> onChanged;
   final String? label;
   final String? helperText;
   final String? hintText;
@@ -37,7 +37,7 @@ class InputFieldDropdownWidget extends StatefulWidget {
 }
 
 class _InputFieldDropdownWidgetState extends State<InputFieldDropdownWidget> {
-  String? _currentValue;
+  DropdownOption? _currentValue;
 
   @override
   void initState() {
@@ -45,7 +45,7 @@ class _InputFieldDropdownWidgetState extends State<InputFieldDropdownWidget> {
     _currentValue = widget.selectedValue;
   }
 
-  void _handleChange(String? value) {
+  void _handleChange(DropdownOption? value) {
     setState(() {
       _currentValue = value;
     });
@@ -56,33 +56,38 @@ class _InputFieldDropdownWidgetState extends State<InputFieldDropdownWidget> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (widget.label != null)
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  if (widget.isShowLabel)
-                    Text(
-                      widget.label!,
-                      style: theme.textTheme.labelLarge?.copyWith(
-                        color: ConstantsColor.PRIMARY.shade900,
-                        fontWeight: FontWeight.w600,
+              if (widget.isShowLabel)
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        widget.label!,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          color: ConstantsColor.PRIMARY.shade900,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
-                  const SizedBox(width: 4),
-                  if (widget.isRequired && widget.isShowLabel)
-                    const Text(
-                      "*",
-                      style: TextStyle(fontSize: 14, color: Colors.red),
-                    ),
-                ],
-              ),
+                    const SizedBox(width: 4),
+                    if (widget.isRequired)
+                      const Text(
+                        "*",
+                        style: TextStyle(fontSize: 14, color: Colors.red),
+                      ),
+                  ],
+                ),
               const SizedBox(height: 8),
             ],
           ),
-        DropdownButtonFormField<String>(
+        DropdownButtonFormField<DropdownOption>(
           value: _currentValue,
           hint: Text(
             widget.hintText ?? '',
@@ -109,10 +114,10 @@ class _InputFieldDropdownWidgetState extends State<InputFieldDropdownWidget> {
             focusedBorder: ConstantsStyling.focusedBorder,
             errorBorder: ConstantsStyling.errorBorder,
           ),
-          items: widget.options.map((status) {
-            return DropdownMenuItem<String>(
-              value: status.name,
-              child: Text(status.name),
+          items: widget.options.map((DropdownOption option) {
+            return DropdownMenuItem<DropdownOption>(
+              value: option,
+              child: Text(option.name),
             );
           }).toList(),
           onChanged: _handleChange,

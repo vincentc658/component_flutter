@@ -62,16 +62,32 @@ class FormScreenAddressState extends State<FormScreenAddress> {
   );
   FormFieldConfig configStatusResidence = FormFieldConfig(
     labelField: 'Status Tempat Tinggal',
-    isShowLabel: false,
+    hint: 'Pilih Status Tempat Tinggal',
     fieldType: ConstantsFormField.TYPE_INPUT_RADIO_GROUP,
     dropdownOptions: [
-      DropdownOption(id: '1', name: 'Aceh'),
-      DropdownOption(id: '2', name: 'Sumatera Utara'),
-      DropdownOption(id: '3', name: 'Sumatera Barat'),
-      DropdownOption(id: '4', name: 'Sumatera Selatan'),
-      DropdownOption(id: '5', name: 'Jambi'),
-      DropdownOption(id: '5', name: 'Pekan Baru'),
+      DropdownOption(id: '1', name: 'Milik Sendiri'),
+      DropdownOption(id: '2', name: 'Milik Keluarga'),
+      DropdownOption(id: '3', name: 'Rumah Dinas'),
+      DropdownOption(id: '4', name: 'Milik Sendiri Dijaminkan '),
+      DropdownOption(id: '5', name: 'Sewa/Kontrak'),
     ],
+  );
+  FormFieldConfig configCountryCode = FormFieldConfig(
+    labelField: 'Kode Negara',
+    hint: 'Pilih ',
+    fieldType: ConstantsFormField.TYPE_INPUT_DROPDOWN,
+    dropdownOptions: [
+      DropdownOption(id: '1', name: ' +62 - Indonesia'),
+      DropdownOption(id: '1', name: ' +65 - India'),
+      DropdownOption(id: '1', name: ' +62 - Indonesia'),
+      DropdownOption(id: '1', name: ' +1 - America'),
+    ],
+  );
+  FormFieldConfig configPhoneNumber = FormFieldConfig(
+    labelField: 'Nomor Telfon',
+    hint: 'Input Nomor Telfon',
+    keyboardType : TextInputType.number,
+    fieldType: ConstantsFormField.TYPE_INPUT_TEXT,
   );
 
   List<FormFieldConfig> fieldsToValidate = [];
@@ -92,6 +108,8 @@ class FormScreenAddressState extends State<FormScreenAddress> {
     fieldsToValidate.add(configSubdistrict);
     fieldsToValidate.add(configPostalCode);
     fieldsToValidate.add(configProvince);
+    fieldsToValidate.add(configCountryCode);
+    fieldsToValidate.add(configPhoneNumber);
     formHelper = FormHelper(fieldsToValidate);
     for (var field in fieldsToValidate) {
       if (field.fieldType == ConstantsFormField.TYPE_INPUT_DROPDOWN) {
@@ -187,6 +205,48 @@ class FormScreenAddressState extends State<FormScreenAddress> {
                     );
                   });
                 },
+              ),
+              InputFieldDropdownWidget(
+                fieldConfig: configStatusResidence,
+                errorText: formHelper.errors[configStatusResidence.labelField],
+                onChanged: (value) {
+                  setState(() {
+                    formHelper.setDropdownValue(
+                      configStatusResidence.labelField,
+                      value?.name,
+                    );
+                  });
+                },
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Flexible(
+                    flex: 1,
+                    child: InputFieldDropdownWidget(
+                      fieldConfig: configCountryCode,
+                      errorText: formHelper.errors[configCountryCode.labelField],
+                      onChanged: (value) {
+                        setState(() {
+                          formHelper.setDropdownValue(
+                            configCountryCode.labelField,
+                            value?.name,
+                          );
+                        });
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Flexible(
+                    flex: 2,
+                    child: InputFieldTextWidget(
+                      fieldConfig: configPhoneNumber,
+                      controller:
+                      formHelper.controllers[configPhoneNumber.labelField]!,
+                      errorText: formHelper.errors[configPhoneNumber.labelField],
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
