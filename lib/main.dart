@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:research_component/screen/form_information_screen.dart';
 import 'package:research_component/screen/form_registration_screen.dart';
+import 'package:research_component/testing_list_page_screen.dart';
 
 void main() {
   runApp(const MyApp());

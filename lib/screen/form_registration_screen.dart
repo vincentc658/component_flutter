@@ -76,14 +76,27 @@ class _FormRegistrationScreenState extends State<FormRegistrationScreen> {
             // Progress Indicator
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: LinearProgressIndicator(
-                value: (currentStep + 1) / totalSteps,
-                minHeight: 6,
-                backgroundColor: Colors.grey[300],
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  ConstantsColor.PRIMARY,
+              child: TweenAnimationBuilder<double>(
+                tween: Tween<double>(
+                  begin: 0,
+                  end: (currentStep + 1) / totalSteps,
                 ),
+                duration: Duration(milliseconds: 400),
+                builder: (context, value, child) {
+                  return ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: LinearProgressIndicator(
+                      value: value,
+                      minHeight: 6,
+                      backgroundColor: Colors.grey[300],
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        ConstantsColor.PRIMARY,
+                      ),
+                    ),
+                  );
+                },
               ),
+
             ),
             const SizedBox(height: 8),
 

@@ -93,7 +93,7 @@ class _InputFieldDropdownWidgetState extends State<InputFieldDropdownWidget> {
             widget.hintText ?? '',
             style: const TextStyle(color: Colors.grey),
           ),
-          icon: const Icon(Icons.arrow_drop_down),
+          // icon: const Icon(Icons.arrow_drop_down),
           decoration: InputDecoration(
             prefixIcon: widget.icon != null
                 ? Padding(
@@ -117,7 +117,9 @@ class _InputFieldDropdownWidgetState extends State<InputFieldDropdownWidget> {
           items: widget.options.map((DropdownOption option) {
             return DropdownMenuItem<DropdownOption>(
               value: option,
-              child: Text(option.name),
+              child: Text(option.name, style: TextStyle(
+                overflow: TextOverflow.ellipsis,
+              ),),
             );
           }).toList(),
           onChanged: _handleChange,

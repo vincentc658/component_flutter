@@ -219,10 +219,9 @@ class FormScreenAddressState extends State<FormScreenAddress> {
                 },
               ),
               Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Flexible(
-                    flex: 1,
+                  Expanded(
+                    flex: 2,
                     child: InputFieldDropdownWidget(
                       fieldConfig: configCountryCode,
                       errorText: formHelper.errors[configCountryCode.labelField],
@@ -237,17 +236,17 @@ class FormScreenAddressState extends State<FormScreenAddress> {
                     ),
                   ),
                   const SizedBox(width: 16),
-                  Flexible(
-                    flex: 2,
+                  Expanded(
+                    flex: 3,
                     child: InputFieldTextWidget(
                       fieldConfig: configPhoneNumber,
-                      controller:
-                      formHelper.controllers[configPhoneNumber.labelField]!,
+                      controller: formHelper.controllers[configPhoneNumber.labelField]!,
                       errorText: formHelper.errors[configPhoneNumber.labelField],
                     ),
                   ),
                 ],
               ),
+
             ],
           ),
         ),

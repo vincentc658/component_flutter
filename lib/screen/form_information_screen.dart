@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:research_component/component/formField/input_field_date_picker.dart';
@@ -5,10 +6,12 @@ import 'package:research_component/component/formField/input_field_dropdown_widg
 import 'package:research_component/component/formField/input_field_radio_group.dart';
 import 'package:research_component/constant/constants_color.dart';
 import 'package:research_component/constant/constants_form_field.dart';
+import '../camera_page.dart';
 import '../component/formField/dropdown_option.dart';
 import '../component/formField/form_field_config.dart';
 import '../component/formField/form_helper.dart';
 import '../component/formField/input_field_text_widget.dart';
+import '../component/formField/input_field_upload_photo.dart';
 
 class FormInformationScreen extends StatefulWidget {
   const FormInformationScreen({Key? key}) : super(key: key);
@@ -20,6 +23,7 @@ class FormInformationScreen extends StatefulWidget {
 class FormInformationScreenState extends State<FormInformationScreen> {
   late FormHelper formHelper;
   Map<String, String?> errors = {};
+  List<CameraDescription> _cameras = [];
   FormFieldConfig configFirstName = FormFieldConfig(
     labelField: 'First Name',
     hint: 'Enter your name',
@@ -132,6 +136,16 @@ class FormInformationScreenState extends State<FormInformationScreen> {
     handleSubmit();
     return formHelper.isValid;
   }
+  Future<void> _initCameras() async {
+    try {
+      final cameras = await availableCameras();
+      setState(() {
+        _cameras = cameras;
+      });
+    } catch (e) {
+      print('Failed to get cameras: $e');
+    }
+  }
 
   String getInfo() {
     return formHelper.getText(fieldsToValidate[0].labelField) ?? '-';
@@ -154,6 +168,7 @@ class FormInformationScreenState extends State<FormInformationScreen> {
     fieldsToValidate.add(configReligion);
 
     formHelper = FormHelper(fieldsToValidate);
+    _initCameras();
   }
 
   @override
@@ -328,6 +343,15 @@ class FormInformationScreenState extends State<FormInformationScreen> {
                     );
                   });
                 },
+              ),
+
+              InputFieldImageUploadWidget(
+                fieldConfig: configMotherName,
+                cameras: _cameras, // Make sure this is passed from `availableCameras()`
+                onImagePicked: (imageFile) {
+                  print("Image picked: ${imageFile?.path}");
+                },
+                errorText: null,
               ),
             ],
           ),
