@@ -12,20 +12,24 @@ class FormRegistrationScreen extends StatefulWidget {
 
 class _FormRegistrationScreenState extends State<FormRegistrationScreen> {
   int currentStep = 0;
-  final int totalSteps = 3;
+  int totalSteps = 3;
   late final List<Widget> _allForms;
-
   final formKeys = [
+    GlobalKey<FormInformationScreenState>(),
+    GlobalKey<FormScreenAddressState>(),
     GlobalKey<FormInformationScreenState>(),
     GlobalKey<FormScreenAddressState>(),
     GlobalKey<FormInformationScreenState>(),
   ];
 
+  final stepTitles = ['Identitas','Kepemilikan','Watchlist','FATCA/CRS','Data Pendukung','BO', 'Customer Risk','Konsen & SK','Konfirmasi'];
+
   void nextStep() {
     final currentFormKey = formKeys[currentStep];
     bool isValid = false;
     if (currentFormKey is GlobalKey<FormInformationScreenState>) {
-      FormInformationScreenState stateInformation= (currentFormKey.currentState as FormInformationScreenState);
+      FormInformationScreenState stateInformation =
+          currentFormKey.currentState as FormInformationScreenState;
       isValid = stateInformation.validateCurrentStep();
     } else if (currentFormKey is GlobalKey<FormScreenAddressState>) {
       isValid =
@@ -34,30 +38,45 @@ class _FormRegistrationScreenState extends State<FormRegistrationScreen> {
     }
 
     if (currentStep < totalSteps - 1 && isValid) {
-      setState(() {
-        currentStep++;
-      });
+      setState(() => currentStep++);
     }
   }
 
   void previousStep() {
     if (currentStep > 0) {
-      setState(() {
-        currentStep--;
-      });
+      setState(() => currentStep--);
     }
+  }
+
+  void goToStep(int step) {
+    if(step<= currentStep){
+      setState(() => currentStep = step);
+    }
+    // if (step >= 0 && step < totalSteps) {
+    // }
   }
 
   void submitForm() {
     // Add your submit logic here
   }
+
   @override
   void initState() {
     super.initState();
+    totalSteps= stepTitles.length;
     _allForms = [
-      FormInformationScreen(key: formKeys[0] as GlobalKey<FormInformationScreenState>),
+      FormInformationScreen(
+        key: formKeys[0] as GlobalKey<FormInformationScreenState>,
+      ),
       FormScreenAddress(key: formKeys[1] as GlobalKey<FormScreenAddressState>),
-      FormInformationScreen(key: formKeys[2] as GlobalKey<FormInformationScreenState>),
+      FormInformationScreen(
+        key: formKeys[2] as GlobalKey<FormInformationScreenState>,
+      ),
+      FormScreenAddress(key: formKeys[3] as GlobalKey<FormScreenAddressState>),
+      FormInformationScreen(
+        key: formKeys[4] as GlobalKey<FormInformationScreenState>,
+      ),
+
     ];
   }
 
@@ -68,111 +87,174 @@ class _FormRegistrationScreenState extends State<FormRegistrationScreen> {
         title: 'Registrasi Pembukaan Rekening',
         isShowBackButton: false,
       ),
-      body: Container(
-        color: Colors.white,
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            // Progress Indicator
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: TweenAnimationBuilder<double>(
-                tween: Tween<double>(
-                  begin: 0,
-                  end: (currentStep + 1) / totalSteps,
-                ),
-                duration: Duration(milliseconds: 400),
-                builder: (context, value, child) {
-                  return ClipRRect(
+      body: Row(
+        children: [
+          Container(
+            width: 200,
+            color: Colors.white,
+            padding: EdgeInsets.symmetric(vertical: 20),
+            child: ListView.builder(
+              itemCount: totalSteps,
+              itemBuilder: (context, index) {
+                final isSelected = index == currentStep;
+                final isCompleted = index < currentStep;
+                final isLast = index == totalSteps - 1;
+
+                return InkWell(
+                  onTap: () => goToStep(index),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Icon + Line Column
+                        Column(
+                          children: [
+                            CircleAvatar(
+                              radius: 18,
+                              backgroundColor: isSelected
+                                  ? ConstantsColor.PRIMARY
+                                  : isCompleted
+                                  ? Colors.green
+                                  : Colors.grey[300],
+                              child: Text(
+                                '${index + 1}',
+                                style: TextStyle(
+                                  color: isSelected
+                                      ? Colors.white
+                                      : isCompleted
+                                      ? Colors.white
+                                      : Colors.black,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                            if (!isLast)
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                child: Container(
+                                  width: 2,
+                                  height: 40,
+                                  color:
+                                  isCompleted ? Colors.green : Colors.grey[400],
+                                ),
+                              ),
+                          ],
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 9),
+                            child: Text(
+                              stepTitles[index],
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: isSelected
+                                    ? ConstantsColor.PRIMARY
+                                    : Colors.black87,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          Container(
+            width: 1,
+            height: double.infinity,
+            color: Colors.black12,
+          ),
+
+          // Form Content
+          Expanded(
+            child: Container(
+              color: Colors.white,
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  // Progress bar (optional)
+                  ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: LinearProgressIndicator(
-                      value: value,
+                      value: (currentStep + 1) / totalSteps,
                       minHeight: 6,
                       backgroundColor: Colors.grey[300],
                       valueColor: AlwaysStoppedAnimation<Color>(
                         ConstantsColor.PRIMARY,
                       ),
                     ),
-                  );
-                },
-              ),
+                  ),
+                  const SizedBox(height: 16),
 
-            ),
-            const SizedBox(height: 8),
-
-            // Form Card
-            Expanded(
-              child: Stack(
-                children: List.generate(totalSteps, (index) {
-                  final isActive = index == currentStep;
-                  return AnimatedSlide(
-                    duration: Duration(milliseconds: 400),
-                    offset: isActive ? Offset.zero : Offset(index < currentStep ? -1 : 1, 0),
-                    child: AnimatedOpacity(
-                      duration: Duration(milliseconds: 400),
-                      opacity: isActive ? 1 : 0,
-                      child: IgnorePointer(
-                        ignoring: !isActive,
-                        child: _allForms[index],
-                      ),
-                    ),
-                  );
-                }),
-              ),
-            ),
-
-
-            const SizedBox(height: 24),
-
-            // Button Controls
-            Row(
-              children: [
-                if (currentStep > 0)
+                  // Form Area
                   Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: previousStep,
-                      icon: Icon(
-                        Icons.arrow_back,
-                        color: ConstantsColor.PRIMARY,
-                      ),
-                      label: Text("Back"),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: ConstantsColor.PRIMARY,
-                        side: BorderSide(color: ConstantsColor.PRIMARY),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                    child: AnimatedSwitcher(
+                      duration: Duration(milliseconds: 400),
+                      child: _allForms[currentStep],
+                    ),
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // Bottom Buttons
+                  Row(
+                    children: [
+                      if (currentStep > 0)
+                        Expanded(
+                          child: OutlinedButton.icon(
+                            onPressed: previousStep,
+                            icon: Icon(
+                              Icons.arrow_back,
+                              color: ConstantsColor.PRIMARY,
+                            ),
+                            label: Text("Back"),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: ConstantsColor.PRIMARY,
+                              side: BorderSide(color: ConstantsColor.PRIMARY),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                          ),
+                        ),
+                      if (currentStep > 0) const SizedBox(width: 12),
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed:
+                              currentStep == totalSteps - 1
+                                  ? submitForm
+                                  : nextStep,
+                          icon: Icon(
+                            currentStep == totalSteps - 1
+                                ? Icons.check
+                                : Icons.arrow_forward,
+                            color: Colors.white,
+                          ),
+                          label: Text(
+                            currentStep == totalSteps - 1 ? "Submit" : "Next",
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: ConstantsColor.PRIMARY,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                if (currentStep > 0) const SizedBox(width: 12),
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed:
-                        currentStep == totalSteps - 1 ? submitForm : nextStep,
-                    icon: Icon(
-                      currentStep == totalSteps - 1
-                          ? Icons.check
-                          : Icons.arrow_forward,
-                      color: Colors.white,
-                    ),
-                    label: Text(
-                      currentStep == totalSteps - 1 ? "Submit" : "Next",
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: ConstantsColor.PRIMARY,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                    ),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -15,6 +15,8 @@ class FormFieldConfig {
   final bool obscureText;
   final bool isRequired;
   final bool isShowLabel;
+`  bool isFieldCorrect;
+  bool isShowStatusField;
 
   // New: Dropdown support
   final int fieldType;
@@ -32,5 +34,7 @@ class FormFieldConfig {
     this.obscureText = false,
     this.isRequired = false,
     this.dropdownOptions,
+    this.isFieldCorrect= false,
+    this.isShowStatusField= false,
   });
 }

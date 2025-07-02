@@ -15,6 +15,8 @@ class InputFieldTextWidget extends StatelessWidget {
   final bool isRequired;
   final bool isShowLabel;
   final TextInputType keyboardType;
+  bool isShowStatusField;
+  bool isFieldCorrect;
 
   InputFieldTextWidget({
     Key? key,
@@ -29,6 +31,8 @@ class InputFieldTextWidget extends StatelessWidget {
        isRequired = fieldConfig.isRequired,
         isShowLabel = fieldConfig.isShowLabel,
        keyboardType = fieldConfig.keyboardType ?? TextInputType.text,
+        isFieldCorrect= fieldConfig.isFieldCorrect,
+        isShowStatusField= fieldConfig.isShowStatusField,
        super(key: key);
 
   @override
@@ -69,6 +73,7 @@ class InputFieldTextWidget extends StatelessWidget {
           keyboardType: keyboardType,
           style: const TextStyle(fontSize: 16),
           decoration: InputDecoration(
+            suffixIcon: isShowStatusField?isFieldCorrect?Icon(Icons.check, color: Colors.green):Icon(Icons.close, color: Colors.red):null,
             prefixIcon:
                 icon != null
                     ? Padding(

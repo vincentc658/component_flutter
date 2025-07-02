@@ -6,7 +6,6 @@ import 'package:research_component/component/formField/input_field_dropdown_widg
 import 'package:research_component/component/formField/input_field_radio_group.dart';
 import 'package:research_component/constant/constants_color.dart';
 import 'package:research_component/constant/constants_form_field.dart';
-import '../camera_page.dart';
 import '../component/formField/dropdown_option.dart';
 import '../component/formField/form_field_config.dart';
 import '../component/formField/form_helper.dart';
@@ -26,9 +25,11 @@ class FormInformationScreenState extends State<FormInformationScreen> {
   List<CameraDescription> _cameras = [];
   FormFieldConfig configFirstName = FormFieldConfig(
     labelField: 'First Name',
+    helper: 'Example : Testing',
     hint: 'Enter your name',
     keyboardType: TextInputType.name,
     fieldType: ConstantsFormField.TYPE_INPUT_TEXT,
+    isFieldCorrect: false
   );
   FormFieldConfig configLastName = FormFieldConfig(
     labelField: 'Last Name',
@@ -37,8 +38,8 @@ class FormInformationScreenState extends State<FormInformationScreen> {
     fieldType: ConstantsFormField.TYPE_INPUT_TEXT,
   );
   FormFieldConfig configMotherName = FormFieldConfig(
-    labelField: 'Mothers Maiden Name',
-    hint: 'Enter your Mothers Maiden Name',
+    labelField: 'Photo ',
+    hint: '',
     keyboardType: TextInputType.emailAddress,
     fieldType: ConstantsFormField.TYPE_INPUT_TEXT,
   );
@@ -126,7 +127,7 @@ class FormInformationScreenState extends State<FormInformationScreen> {
     keyboardType: TextInputType.number,
     fieldType: ConstantsFormField.TYPE_INPUT_TEXT,
   );
-
+  TextEditingController ctr= TextEditingController();
   List<FormFieldConfig> fieldsToValidate = [];
 
   bool validateCurrentStep() {
@@ -308,6 +309,7 @@ class FormInformationScreenState extends State<FormInformationScreen> {
                       controller:
                           formHelper.controllers[configIdNumber.labelField]!,
                       errorText: formHelper.errors[configIdNumber.labelField],
+
                     ),
                   ),
                 ],
@@ -353,6 +355,11 @@ class FormInformationScreenState extends State<FormInformationScreen> {
                 },
                 errorText: null,
               ),
+              TextButton(onPressed: (){
+                setState(() {
+                  configFirstName.isFieldCorrect= true;
+                });
+              }, child: Text('Press'))
             ],
           ),
         ),

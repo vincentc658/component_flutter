@@ -105,6 +105,7 @@ class _InputFieldDropdownWidgetState extends State<InputFieldDropdownWidget> {
               vertical: 14,
               horizontal: 16,
             ),
+            suffix: Icon(Icons.check_outlined, color: Colors.green,),
             errorText: widget.errorText,
             errorStyle: ConstantsStyling.textStyleError,
             filled: true,
